@@ -105,6 +105,8 @@ Application.prototype = {
             this.first_planets.push(firstPlanet);
             time += 20;
         }
+        shuffle(names);
+        shuffle(tiles);
 
         for (var i = 0; i < 12; ++i) {
             secondOrbit  = new Orbit(secondCenter.clone(), 90+i*26).setProperty({
@@ -132,14 +134,15 @@ Application.prototype = {
         });
         ctx.clearRect(0, 0, this.width, this.height);
 
-        var showInfo = -1;
+        var showFirstInfo = -1;
+        var showSecondInfo = -1;
         for (var i = 0, il = firstPlanets.length; i < il; ++i) {
             firstPlanets[i].orbit.draw();
             firstPlanets[i].render(curTime - lastTime);
             if (Math.abs(firstPlanets[i].pos.x - mouse.pos.x) < firstPlanets[i].radius
                 && Math.abs(firstPlanets[i].pos.y - mouse.pos.y) < firstPlanets[i].radius)
             {
-                showInfo = i;
+                showFirstInfo = i;
                 if (mouse.pressed) {
                     firstPlanets[i].animate = firstPlanets[i].animate ? false : true;
                 }
@@ -152,18 +155,24 @@ Application.prototype = {
             if (Math.abs(secondPlanets[i].pos.x - mouse.pos.x) < secondPlanets[i].radius
                 && Math.abs(secondPlanets[i].pos.y - mouse.pos.y) < secondPlanets[i].radius)
             {
-                showInfo = i;
+                showSecondInfo = i;
                 if (mouse.pressed) {
                     secondPlanets[i].animate = secondPlanets[i].animate ? false : true;
                 }
             }
         }
 
-        if (showInfo > -1) {
-            firstPlanets[showInfo].showInfo();
-            secondPlanets[showInfo].showInfo();
-            secondPlanets[showInfo].drawBorder();
-            firstPlanets[showInfo].drawBorder();
+        if (showFirstInfo > -1) {
+            firstPlanets[showFirstInfo].showInfo();
+            firstPlanets[showFirstInfo].drawBorder();
+            document.body.style.cursor = 'pointer';
+        } else {
+            document.body.style.cursor = 'default';
+        }
+
+        if (showSecondInfo > -1) {
+            secondPlanets[showSecondInfo].showInfo();
+            secondPlanets[showSecondInfo].drawBorder();
             document.body.style.cursor = 'pointer';
         } else {
             document.body.style.cursor = 'default';
