@@ -67,6 +67,12 @@ Planet.prototype = {
             this.tile.draw(this.pos.x, this.pos.y, // Центр тайла
                 this.orbit.center, this.radius);
         }
+    },
+    planetInfo: function(){
+        var str = '';
+        str += '<h3>' + this.name + '</h3>';
+        str += '<a class="btn-glow-inverse">Upgrade Mine</a>';
+        str += '<a class="btn-glow-inverse">Upgrade Cannon</a>';
+        return str;
     }
-
 };

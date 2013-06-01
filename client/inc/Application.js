@@ -147,26 +147,28 @@ Application.prototype = {
             if (Math.abs(firstPlanets[i].pos.x - mouse.pos.x) < firstPlanets[i].radius
                 && Math.abs(firstPlanets[i].pos.y - mouse.pos.y) < firstPlanets[i].radius)
             {
+                if (i != 0){
                     showFirstInfo = i;
-                if (mouse.pressed) {
-                    if(firstPlanets[i].detail){
-                        $('.planet').remove();
-                        this.divExists = false;
-                        firstPlanets[i].detail = false;
-                    }else{
-                        if(this.divExists){
+                    if (mouse.pressed) {
+                        if(firstPlanets[i].detail){
                             $('.planet').remove();
-                        }
-                        this.div = document.createElement('div');
-                        this.div.className = 'planet';
-                        $(this.div).appendTo('#controls');
-                        $('.planet').attr('style', 'background-color:#ffffff');
-                        $('.planet').text(firstPlanets[i].name);
-                        this.divExists = true;
-                        firstPlanets[i].detail = true;
-                        for (var j = 0; j < il; j++){
-                            if(j != i){
-                                firstPlanets[j].detail = false;
+                            this.divExists = false;
+                            firstPlanets[i].detail = false;
+                        }else{
+                            if(this.divExists){
+                                $('.planet').remove();
+                            }
+                            this.div = document.createElement('div');
+                            this.div.className = 'planet';
+                            $(this.div).appendTo('#controls');
+                            $('.planet').attr('style', 'background-image: url(../img/sky.png)');
+                            $('.planet').html(firstPlanets[i].planetInfo());
+                            this.divExists = true;
+                            firstPlanets[i].detail = true;
+                            for (var j = 0; j < il; j++){
+                                if(j != i){
+                                    firstPlanets[j].detail = false;
+                                }
                             }
                         }
                     }
@@ -180,26 +182,28 @@ Application.prototype = {
             if (Math.abs(secondPlanets[i].pos.x - mouse.pos.x) < secondPlanets[i].radius
                 && Math.abs(secondPlanets[i].pos.y - mouse.pos.y) < secondPlanets[i].radius)
             {
+                if (i != 0){
                     showSecondInfo = i;
-                if (mouse.pressed) {
-                    if(secondPlanets[i].detail){
-                        $('.planet').remove();
-                        this.divExists = false;
-                        secondPlanets[i].detail = false;
-                    }else{
-                        if(this.divExists){
+                    if (mouse.pressed) {
+                        if(secondPlanets[i].detail){
                             $('.planet').remove();
-                        }
-                        this.div = document.createElement('div');
-                        this.div.className = 'planet';
-                        $(this.div).appendTo('#controls');
-                        $('.planet').attr('style', 'background-color:#ff00ff');
-                        $('.planet').text(secondPlanets[i].name);
-                        this.divExists = true;
-                        secondPlanets[i].detail = true;
-                        for (var j = 0; j < il; j++){
-                            if(j != i){
-                                secondPlanets[j].detail = false;
+                            this.divExists = false;
+                            secondPlanets[i].detail = false;
+                        }else{
+                            if(this.divExists){
+                                $('.planet').remove();
+                            }
+                            this.div = document.createElement('div');
+                            this.div.className = 'planet';
+                            $(this.div).appendTo('#controls');
+                            $('.planet').attr('style', 'background-image: url(../img/sky.png)');
+                            $('.planet').html(secondPlanets[i].planetInfo());
+                            this.divExists = true;
+                            secondPlanets[i].detail = true;
+                            for (var j = 0; j < il; j++){
+                                if(j != i){
+                                    secondPlanets[j].detail = false;
+                                }
                             }
                         }
                     }
@@ -207,12 +211,12 @@ Application.prototype = {
             }
         }
 
-        if (showFirstInfo > -1) {
+        if (showFirstInfo > 0) {
             firstPlanets[showFirstInfo].showInfo();
             firstPlanets[showFirstInfo].drawBorder();
             document.body.style.cursor = 'pointer';
         } else {
-        if (showSecondInfo > -1) {
+        if (showSecondInfo > 0) {
             secondPlanets[showSecondInfo].showInfo();
             secondPlanets[showSecondInfo].drawBorder();
             document.body.style.cursor = 'pointer';
