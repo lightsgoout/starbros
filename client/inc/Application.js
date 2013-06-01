@@ -151,18 +151,17 @@ Application.prototype = {
                     showFirstInfo = i;
                     if (mouse.pressed) {
                         if(firstPlanets[i].detail){
-                            $('.planet').remove();
+                            $('#planet').remove();
                             this.divExists = false;
                             firstPlanets[i].detail = false;
                         }else{
                             if(this.divExists){
-                                $('.planet').remove();
+                                $('#planet').remove();
                             }
                             this.div = document.createElement('div');
-                            this.div.className = 'planet';
+                            this.div.id = 'planet';
                             $(this.div).appendTo('#controls');
-                            $('.planet').attr('style', 'background-image: url(../img/sky.png)');
-                            $('.planet').html(firstPlanets[i].planetInfo());
+                            $('#planet').html(firstPlanets[i].planetInfo());
                             this.divExists = true;
                             firstPlanets[i].detail = true;
                             for (var j = 0; j < il; j++){
@@ -186,18 +185,17 @@ Application.prototype = {
                     showSecondInfo = i;
                     if (mouse.pressed) {
                         if(secondPlanets[i].detail){
-                            $('.planet').remove();
+                            $('#planet').remove();
                             this.divExists = false;
                             secondPlanets[i].detail = false;
                         }else{
                             if(this.divExists){
-                                $('.planet').remove();
+                                $('#planet').remove();
                             }
                             this.div = document.createElement('div');
-                            this.div.className = 'planet';
+                            this.div.id = 'planet';
                             $(this.div).appendTo('#controls');
-                            $('.planet').attr('style', 'background-image: url(../img/sky.png)');
-                            $('.planet').html(secondPlanets[i].planetInfo());
+                            $('#planet').html(secondPlanets[i].planetInfo());
                             this.divExists = true;
                             secondPlanets[i].detail = true;
                             for (var j = 0; j < il; j++){

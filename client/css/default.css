@@ -10,6 +10,8 @@ html, body {
     font-family: monospace;
     background-image: url(../img/sky.png);
 }
+#application { position:relative } /* Make this a positioned parent */
+#controls     { position:absolute; top:40%; left:40%; background-image:url(../img/controls.png);}
 
 #info {
     text-align: center;
