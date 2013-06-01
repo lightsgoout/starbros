@@ -20,4 +20,5 @@ from django.contrib import admin
 admin.autodiscover()
 urlpatterns.extend([
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^api/', include('api.urls'))
 ])
