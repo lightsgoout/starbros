@@ -6,6 +6,8 @@ function Planet(orbit, radius, time) {
     this.speed  = Math.PI*2 / (time * 1000);
     this.angle  = ~~(Math.random() * 360);
 
+    this.mines = 5;
+    this.power= 120;
     this.attack = 300;
     this.detail = false;
     this.animate = true;
@@ -69,10 +71,16 @@ Planet.prototype = {
         }
     },
     planetInfo: function(){
-        var str = '';
+        var str = ''
+        //str += '<div id="closeButton" onclick="del()">Х</div>';
         str += '<h3>' + this.name + '</h3>';
+        str += '<p>Mines level :' + this.mines + '</p>';
+        str += '<p>Fire power :' + this.power + '</p>';
         str += '<a class="btn-glow-inverse">Upgrade Mine</a>';
         str += '<a class="btn-glow-inverse">Upgrade Cannon</a>';
         return str;
-    }
+    },
 };
+//function del(){
+//    $('#planet').remove();
+//}
