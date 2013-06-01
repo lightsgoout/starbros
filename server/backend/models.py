@@ -1,10 +1,13 @@
 from django.conf import settings
 from django.db import models
 
+PLANET_SIZE_SMALL = 10
+PLANET_SIZE_MEDIUM = 20
+PLANET_SIZE_LARGE = 30
 PLANET_SIZES = (
-    (10, 'small'),
-    (20, 'medium'),
-    (30, 'large')
+    (PLANET_SIZE_SMALL, 'small'),
+    (PLANET_SIZE_MEDIUM, 'medium'),
+    (PLANET_SIZE_LARGE, 'large')
 )
 
 PLANET_COUNTS = (
@@ -13,10 +16,13 @@ PLANET_COUNTS = (
     (9, 'Nine planets'),
 )
 
+PLANET_POOR = 10
+PLANET_MEDIUM = 20
+PLANET_RICH = 30
 RICHNESS_CHOICES = (
-    (10, 'Poor'),
-    (20, 'Medium'),
-    (30, 'Rich'),
+    (PLANET_POOR, 'Poor'),
+    (PLANET_MEDIUM, 'Medium'),
+    (PLANET_RICH, 'Rich'),
 )
 
 
@@ -47,5 +53,6 @@ class Game(models.Model):
     )
     left_star = models.ForeignKey(StarSystem, related_name='game_left')
     right_star = models.ForeignKey(StarSystem, related_name='game_right')
+
 
 
