@@ -4,6 +4,8 @@
     <title>«StarBros»</title>
 
     <link rel="stylesheet" href="css/default.css"/>
+    <link rel="stylesheet" href="css/button.css"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
     <script src="inc/Application.js"></script>
     <script src="inc/System.js"></script>
     <script src="inc/Point.js"></script>
@@ -15,12 +17,14 @@
 <body>
     <div class="header">
     </div>
-    <div class="application">
+    <div id="application">
         <script>
-            var app = new Application(1680, 840);
+            var app = new Application(1640, 840);
         </script>
     </div>
     <div class="footer">
+        <div id="controls">
+        </div>
     </div>
 </body>
 </html>

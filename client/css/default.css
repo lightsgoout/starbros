@@ -5,7 +5,7 @@
 }
 
 html, body {
-    overflow: hidden;
+    /*overflow: hidden;*/
     height: 100%;
     font-family: monospace;
     background-image: url(../img/sky.png);
