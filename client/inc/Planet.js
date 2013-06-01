@@ -81,6 +81,4 @@ Planet.prototype = {
         return str;
     },
 };
-//function del(){
-//    $('#planet').remove();
-//}
+//-

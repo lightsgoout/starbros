@@ -19,7 +19,9 @@
     </div>
     <div id="application">
         <script>
-            var app = new Application(1640, 840);
+            var width = $(document).width();
+            var height = $(document).height();
+            var app = new Application(width, height);
         </script>
         <div id="controls">
         </div>
