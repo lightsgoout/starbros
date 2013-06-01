@@ -6,6 +6,7 @@ function Planet(orbit, radius, time) {
     this.speed  = Math.PI*2 / (time * 1000);
     this.angle  = ~~(Math.random() * 360);
 
+    this.attack = 300;
     this.detail = false;
     this.animate = true;
     this.name;
@@ -36,23 +37,30 @@ Planet.prototype = {
     },
     render: function(deltaTime) {
         if (this.animate) {
-//            if (this.detail){
-//                this.pos.x = this.orbit.center.x + this.orbit.radius * Math.cos(this.angle);
-//                this.pos.y = this.orbit.center.y + this.orbit.radius * Math.sin(this.angle);
-//                this.angle += this.speed * deltaTime;
-//                var x = this.orbit.center.x - 150;
-//                var y = this.orbit.center.y  - 150;
-//
-//                var ctx = this.ctx;
-//                ctx.fillStyle = '#002244';
-//                ctx.fillRect(x, y, 300, 300);
-//                ctx.fillStyle = '#0ff';
-//                ctx.fillText(this.name, x + 50, y + 17);
-//            }else{
+            if (this.detail){
                 this.pos.x = this.orbit.center.x + this.orbit.radius * Math.cos(this.angle);
                 this.pos.y = this.orbit.center.y + this.orbit.radius * Math.sin(this.angle);
                 this.angle += this.speed * deltaTime;
-            //}
+                var x = this.pos.x;
+                var y = this.pos.y;
+                var r = this.attack;
+
+                var ctx = this.ctx;
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'rgb(0,192,255)';
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI * 2, true);
+                ctx.closePath();
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(this.pos.x, this.pos.y, this.radius * 1.1, 0, Math.PI * 2, true);
+                ctx.closePath();
+                ctx.stroke();
+            }else{
+                this.pos.x = this.orbit.center.x + this.orbit.radius * Math.cos(this.angle);
+                this.pos.y = this.orbit.center.y + this.orbit.radius * Math.sin(this.angle);
+                this.angle += this.speed * deltaTime;
+            }
         }
 
         if (typeof this.tile !== 'undefined') {

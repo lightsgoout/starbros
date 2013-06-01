@@ -160,8 +160,8 @@ Application.prototype = {
                         this.div = document.createElement('div');
                         this.div.className = 'planet';
                         $(this.div).appendTo('#controls');
-                        $('.planet').attr('style', 'background-color:#ff00ff');
-                        $('.planet').text('bal-bla');
+                        $('.planet').attr('style', 'background-color:#ffffff');
+                        $('.planet').text(firstPlanets[i].name);
                         this.divExists = true;
                         firstPlanets[i].detail = true;
                         for (var j = 0; j < il; j++){
@@ -194,7 +194,7 @@ Application.prototype = {
                         this.div.className = 'planet';
                         $(this.div).appendTo('#controls');
                         $('.planet').attr('style', 'background-color:#ff00ff');
-                        $('.planet').text('bal-bla');
+                        $('.planet').text(secondPlanets[i].name);
                         this.divExists = true;
                         secondPlanets[i].detail = true;
                         for (var j = 0; j < il; j++){
@@ -212,16 +212,13 @@ Application.prototype = {
             firstPlanets[showFirstInfo].drawBorder();
             document.body.style.cursor = 'pointer';
         } else {
-            document.body.style.cursor = 'default';
-        }
-
         if (showSecondInfo > -1) {
             secondPlanets[showSecondInfo].showInfo();
             secondPlanets[showSecondInfo].drawBorder();
             document.body.style.cursor = 'pointer';
         } else {
             document.body.style.cursor = 'default';
-        }
+        }}
 //        if(firstPlanets[i].detail){
 //
 //        }
