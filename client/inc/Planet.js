@@ -6,6 +6,7 @@ function Planet(orbit, radius, time) {
     this.speed  = Math.PI*2 / (time * 1000);
     this.angle  = ~~(Math.random() * 360);
 
+    this.detail = false;
     this.animate = true;
     this.name;
     this.tile;
@@ -35,9 +36,23 @@ Planet.prototype = {
     },
     render: function(deltaTime) {
         if (this.animate) {
-            this.pos.x = this.orbit.center.x + this.orbit.radius * Math.cos(this.angle);
-            this.pos.y = this.orbit.center.y + this.orbit.radius * Math.sin(this.angle);
-            this.angle += this.speed * deltaTime;
+//            if (this.detail){
+//                this.pos.x = this.orbit.center.x + this.orbit.radius * Math.cos(this.angle);
+//                this.pos.y = this.orbit.center.y + this.orbit.radius * Math.sin(this.angle);
+//                this.angle += this.speed * deltaTime;
+//                var x = this.orbit.center.x - 150;
+//                var y = this.orbit.center.y  - 150;
+//
+//                var ctx = this.ctx;
+//                ctx.fillStyle = '#002244';
+//                ctx.fillRect(x, y, 300, 300);
+//                ctx.fillStyle = '#0ff';
+//                ctx.fillText(this.name, x + 50, y + 17);
+//            }else{
+                this.pos.x = this.orbit.center.x + this.orbit.radius * Math.cos(this.angle);
+                this.pos.y = this.orbit.center.y + this.orbit.radius * Math.sin(this.angle);
+                this.angle += this.speed * deltaTime;
+            //}
         }
 
         if (typeof this.tile !== 'undefined') {
@@ -45,4 +60,5 @@ Planet.prototype = {
                 this.orbit.center, this.radius);
         }
     }
+
 };

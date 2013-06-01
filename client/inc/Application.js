@@ -7,6 +7,7 @@ var Application = function(width, height) {
     this.ctx;
     this.mouse;
 
+    this.divExists = false;
     this.width  = width;
     this.height = height;
     this._resources = {};
@@ -23,7 +24,7 @@ Application.prototype = {
     init: function(width, height) {
         var initRunTime = new Date();
         this.canvas = document.createElement('canvas');
-        document.body.appendChild(this.canvas);
+        $(this.canvas).appendTo("#application");
         this.canvas.width  = width;
         this.canvas.height = height;
         if (!this.canvas.getContext('2d')) {
@@ -107,6 +108,7 @@ Application.prototype = {
         }
         shuffle(names);
         shuffle(tiles);
+        time  = 40;
 
         for (var i = 0; i < 12; ++i) {
             secondOrbit  = new Orbit(secondCenter.clone(), 90+i*26).setProperty({
@@ -135,16 +137,39 @@ Application.prototype = {
         ctx.clearRect(0, 0, this.width, this.height);
 
         var showFirstInfo = -1;
+        //var showFirstDetail = -1;
         var showSecondInfo = -1;
+       //var showSecondDetail = -1;
+
         for (var i = 0, il = firstPlanets.length; i < il; ++i) {
             firstPlanets[i].orbit.draw();
             firstPlanets[i].render(curTime - lastTime);
             if (Math.abs(firstPlanets[i].pos.x - mouse.pos.x) < firstPlanets[i].radius
                 && Math.abs(firstPlanets[i].pos.y - mouse.pos.y) < firstPlanets[i].radius)
             {
-                showFirstInfo = i;
+                    showFirstInfo = i;
                 if (mouse.pressed) {
-                    firstPlanets[i].animate = firstPlanets[i].animate ? false : true;
+                    if(firstPlanets[i].detail){
+                        $('.planet').remove();
+                        this.divExists = false;
+                        firstPlanets[i].detail = false;
+                    }else{
+                        if(this.divExists){
+                            $('.planet').remove();
+                        }
+                        this.div = document.createElement('div');
+                        this.div.className = 'planet';
+                        $(this.div).appendTo('#controls');
+                        $('.planet').attr('style', 'background-color:#ff00ff');
+                        $('.planet').text('bal-bla');
+                        this.divExists = true;
+                        firstPlanets[i].detail = true;
+                        for (var j = 0; j < il; j++){
+                            if(j != i){
+                                firstPlanets[j].detail = false;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -155,9 +180,29 @@ Application.prototype = {
             if (Math.abs(secondPlanets[i].pos.x - mouse.pos.x) < secondPlanets[i].radius
                 && Math.abs(secondPlanets[i].pos.y - mouse.pos.y) < secondPlanets[i].radius)
             {
-                showSecondInfo = i;
+                    showSecondInfo = i;
                 if (mouse.pressed) {
-                    secondPlanets[i].animate = secondPlanets[i].animate ? false : true;
+                    if(secondPlanets[i].detail){
+                        $('.planet').remove();
+                        this.divExists = false;
+                        secondPlanets[i].detail = false;
+                    }else{
+                        if(this.divExists){
+                            $('.planet').remove();
+                        }
+                        this.div = document.createElement('div');
+                        this.div.className = 'planet';
+                        $(this.div).appendTo('#controls');
+                        $('.planet').attr('style', 'background-color:#ff00ff');
+                        $('.planet').text('bal-bla');
+                        this.divExists = true;
+                        secondPlanets[i].detail = true;
+                        for (var j = 0; j < il; j++){
+                            if(j != i){
+                                secondPlanets[j].detail = false;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -177,6 +222,24 @@ Application.prototype = {
         } else {
             document.body.style.cursor = 'default';
         }
+//        if(firstPlanets[i].detail){
+//
+//        }
+//        if (showFirstDetail > -1) {
+//            firstPlanets[showFirstDetail].detailInfo();
+//            //firstPlanets[showFirstDeatail].drawBorder();
+//            document.body.style.cursor = 'pointer';
+//        } else {
+//            document.body.style.cursor = 'default';
+//        }
+//
+//        if (showSecondDetail > -1) {
+//            secondPlanets[showSecondDetail].detailInfo();
+//            //firstPlanets[showFirstDeatail].drawBorder();
+//            document.body.style.cursor = 'pointer';
+//        } else {
+//            document.body.style.cursor = 'default';
+//        }
         mouse.pressed = false;
     }
 }
