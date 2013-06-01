@@ -45,7 +45,7 @@ class Game(models.Model):
         null=True,
         blank=True,
     )
-    left_star = models.ForeignKey(StarSystem)
-    right_star = models.ForeignKey(StarSystem)
+    left_star = models.ForeignKey(StarSystem, related_name='left_star')
+    right_star = models.ForeignKey(StarSystem, related_name='right_star')
 
 
