@@ -1,4 +1,6 @@
 var cls = require("./lib/class"),
+    _ = require("underscore"),
+    Log = require('log');
 
 // ======= GAME SERVER ========
 
@@ -20,51 +22,12 @@ module.exports = World = cls.Class.extend({
         });
     },
 
-    run: function(mapFilePath) {
+    run: function() {
         var self = this;
-
-        this.map = new Map(mapFilePath);
-
-        this.map.ready(function() {
-            self.initZoneGroups();
-
-            self.map.generateCollisionGrid();
-
-            // Populate all mob "roaming" areas
-            _.each(self.map.mobAreas, function(a) {
-                var area = new MobArea(a.id, a.nb, a.type, a.x, a.y, a.width, a.height, self);
-                area.spawnMobs();
-                area.onEmpty(self.handleEmptyMobArea.bind(self, area));
-
-                self.mobAreas.push(area);
-            });
-
-            // Create all chest areas
-            _.each(self.map.chestAreas, function(a) {
-                var area = new ChestArea(a.id, a.x, a.y, a.w, a.h, a.tx, a.ty, a.i, self);
-                self.chestAreas.push(area);
-                area.onEmpty(self.handleEmptyChestArea.bind(self, area));
-            });
-
-            // Spawn static chests
-            _.each(self.map.staticChests, function(chest) {
-                var c = self.createChest(chest.x, chest.y, chest.i);
-                self.addStaticItem(c);
-            });
-
-            // Spawn static entities
-            self.spawnStaticEntities();
-
-            // Set maximum number of entities contained in each chest area
-            _.each(self.chestAreas, function(area) {
-                area.setNumberOfEntities(area.entities.length);
-            });
-        });
 
         var regenCount = this.ups * 2;
         var updateCount = 0;
         setInterval(function() {
-            self.processGroups();
             self.processQueues();
 
             if(updateCount < regenCount) {
@@ -77,7 +40,7 @@ module.exports = World = cls.Class.extend({
             }
         }, 1000 / this.ups);
 
-        log.info(""+this.id+" created (capacity: "+this.maxPlayers+" players).");
+        log.info(""+this.id+" created");
     },
 
     setUpdatesPerSecond: function(ups) {

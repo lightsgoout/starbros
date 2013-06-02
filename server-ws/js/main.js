@@ -4,7 +4,7 @@ var fs = require('fs');
 
 function main(config) {
     var ws = require("./ws"),
-        WorldServer = require("./worldserver"),
+        GameServer = require("./game"),
         Log = require('log'),
         server = new ws.MultiVersionWebsocketServer(config.port),
         worlds = [];
@@ -31,16 +31,6 @@ function main(config) {
 
     server.onError(function() {
         log.error(Array.prototype.join.call(arguments, ", "));
-    });
-
-    _.each(_.range(config.nb_worlds), function(i) {
-        var world = new WorldServer('world'+ (i+1), config.nb_players_per_world, server);
-        world.run(config.map_filepath);
-        worlds.push(world);
-        if(metrics) {
-            world.onPlayerAdded(onPopulationChange);
-            world.onPlayerRemoved(onPopulationChange);
-        }
     });
 
     process.on('uncaughtException', function (e) {
