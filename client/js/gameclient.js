@@ -7,7 +7,6 @@ define(['lib/bison'], function(BISON) {
             this.host = host;
             this.port = port;
 
-            this.connected_callback = null;
             this.useBison = false;
             this.enable();
         },
@@ -20,7 +19,7 @@ define(['lib/bison'], function(BISON) {
             this.isListening = false;
         },
 
-        connect: function(dispatcherMode) {
+        connect: function() {
             var url = "ws://"+ this.host +":"+ this.port +"/",
                 self = this;
 
@@ -32,55 +31,24 @@ define(['lib/bison'], function(BISON) {
                 this.connection = new WebSocket(url);
             }
 
-            if(dispatcherMode) {
-                this.connection.onmessage = function(e) {
-                    var reply = JSON.parse(e.data);
+            this.connection.onopen = function(e) {
+                console.log("Connected to server "+self.host+":"+self.port);
+                self.sendMessage({"a":1});
+            };
 
-                    if(reply.status === 'OK') {
-                        self.dispatched_callback(reply.host, reply.port);
-                    } else if(reply.status === 'FULL') {
-                        alert("BrowserQuest is currently at maximum player population. Please retry later.");
-                    } else {
-                        alert("Unknown error while connecting to BrowserQuest.");
-                    }
-                };
-            } else {
-                this.connection.onopen = function(e) {
-                    console.log("Connected to server "+self.host+":"+self.port);
-                };
+            this.connection.onmessage = function(e) {
+                console.log(e);
+                self.receiveMessage(e.data);
+            };
 
-                this.connection.onmessage = function(e) {
-                    if(e.data === "go") {
-                        if(self.connected_callback) {
-                            self.connected_callback();
-                        }
-                        return;
-                    }
-                    if(e.data === 'timeout') {
-                        self.isTimeout = true;
-                        return;
-                    }
+            this.connection.onerror = function(e) {
+                console.log(e, true);
+            };
 
-                    self.receiveMessage(e.data);
-                };
-
-                this.connection.onerror = function(e) {
-                    console.log(e, true);
-                };
-
-                this.connection.onclose = function() {
-                    console.log("Connection closed");
-                    $('#container').addClass('error');
-
-                    if(self.disconnected_callback) {
-                        if(self.isTimeout) {
-                            self.disconnected_callback("You have been disconnected for being inactive for too long");
-                        } else {
-                            self.disconnected_callback("The connection to BrowserQuest has been lost");
-                        }
-                    }
-                };
-            }
+            this.connection.onclose = function() {
+                console.log("Connection closed");
+                $('#container').addClass('error');
+            };
         },
 
         sendMessage: function(json) {
@@ -92,7 +60,9 @@ define(['lib/bison'], function(BISON) {
                     data = JSON.stringify(json);
                 }
                 this.connection.send(data);
+                console.log('sent message');
             }
+
         },
 
         receiveMessage: function(message) {
