@@ -21,6 +21,7 @@ function main(config) {
     log.info("Starting StarBros game server...");
 
     server.onConnect(function(connection) {
+        log.info("Someone connected");
         var world, // the one in which the player will be spawned
             connect = function() {
                 if(world) {

@@ -1,5 +1,5 @@
 
-define(['player', 'lib/bison'], function(Player, BISON) {
+define(['lib/bison'], function(BISON) {
 
     var GameClient = Class.extend({
         init: function(host, port) {
@@ -65,11 +65,11 @@ define(['player', 'lib/bison'], function(Player, BISON) {
                 };
 
                 this.connection.onerror = function(e) {
-                    log.error(e, true);
+                    console.log(e, true);
                 };
 
                 this.connection.onclose = function() {
-                    log.debug("Connection closed");
+                    console.log("Connection closed");
                     $('#container').addClass('error');
 
                     if(self.disconnected_callback) {
@@ -105,7 +105,7 @@ define(['player', 'lib/bison'], function(Player, BISON) {
                     data = JSON.parse(message);
                 }
 
-                log.debug("data: " + message);
+                console.log("data: " + message);
 
                 if(data instanceof Array) {
                     if(data[0] instanceof Array) {
@@ -125,7 +125,7 @@ define(['player', 'lib/bison'], function(Player, BISON) {
                 this.handlers[action].call(this, data);
             }
             else {
-                log.error("Unknown action : " + action);
+                console.log("Unknown action : " + action);
             }
         },
 
