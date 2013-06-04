@@ -1,6 +1,7 @@
 var cls = require("./lib/class"),
     _ = require("underscore"),
     Log = require('log'),
+    containers = require('./gamecontainer'),
     Types = require("../../shared/js/gametypes");
 
 // ======= GAME SERVER ========
@@ -9,6 +10,7 @@ module.exports = GameServer = cls.Class.extend({
     init: function(id, websocketServer) {
         this.id = id;
         this.server = websocketServer;
+        this.containers = [];
         this.handlers = [];
         this.handlers[Types.Messages.HELLO] = this.receiveHello;
     },
@@ -55,7 +57,6 @@ module.exports = GameServer = cls.Class.extend({
                 data = JSON.stringify(json);
             }
             this.connection.send(data);
-            console.log('sent message');
         }
 
     },
@@ -76,12 +77,14 @@ module.exports = GameServer = cls.Class.extend({
             this.handlers[action].call(this, args);
         }
         else {
-            console.log("Unknown action : " + action);
+            log.error("Unknown action : " + action);
         }
     },
 
     receiveHello: function(args) {
-        console.log("Hello received");
+        log.info("Hello received");
+        this.containers.push(new containers.BotContainer());
+
     }
 
 
