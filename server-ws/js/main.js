@@ -4,11 +4,10 @@ var fs = require('fs'),
 
 
 function main(config) {
-    var GameServer = require("./game"),
+    var GameServer = require("./gameserver"),
         Log = require('log'),
-        //server = new ws.MultiVersionWebsocketServer(config.port),
-        server = new WebSocketServer({port: '8005'});
-        worlds = [];
+        server = new WebSocketServer({port: '8005'}),
+        game = new GameServer(server);
 
     switch(config.debug_level) {
         case "error":
@@ -17,17 +16,18 @@ function main(config) {
             log = new Log(Log.DEBUG); break;
         case "info":
             log = new Log(Log.INFO); break;
-    };
+    }
 
     log.info("Starting StarBros game server...");
-
 
     server.on('connection', function(ws) {
         log.info('Someone connected');
         ws.on('message', function(message) {
-            log.info("received: %s", message);
+            game.receiveMessage(message);
         });
     });
+
+
 
 //    server.onConnect(function(connection) {
 //        log.info("Someone connected");

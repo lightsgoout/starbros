@@ -1,5 +1,5 @@
 
-define(['lib/bison'], function(BISON) {
+define(['lib/bison', 'shared/js/gametypes'], function(BISON) {
 
     var GameClient = Class.extend({
         init: function(host, port) {
@@ -33,11 +33,10 @@ define(['lib/bison'], function(BISON) {
 
             this.connection.onopen = function(e) {
                 console.log("Connected to server "+self.host+":"+self.port);
-                self.sendMessage({"a":1});
+                self.sendHello();
             };
 
             this.connection.onmessage = function(e) {
-                console.log(e);
                 self.receiveMessage(e.data);
             };
 
@@ -49,6 +48,25 @@ define(['lib/bison'], function(BISON) {
                 console.log("Connection closed");
                 $('#container').addClass('error');
             };
+        },
+
+        sendHello: function(game_id) {
+
+            var self = this;
+
+            if (!game_id) {
+                return self.sendCommand(Types.Messages.HELLO);
+            } else {
+                return self.sendCommand(Types.Messages.HELLO, game_id);
+            }
+        },
+
+        sendCommand: function(command, args) {
+            var json = [
+                command,
+                args
+            ];
+            return this.sendMessage(json);
         },
 
         sendMessage: function(json) {
