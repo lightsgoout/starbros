@@ -6,21 +6,20 @@ var cls = require("./lib/class"),
 // ======= GAME SERVER ========
 
 PlayerInterface = cls.Class.extend({
-    init: function() {
-        log.info('Bot created');
-    },
-
-    setStarPosition: function(x,y) {
-
-    }
 
 });
 
 HumanPlayer = PlayerInterface.extend({
-
+    init: function(player_id) {
+        this.id = player_id;
+    }
 });
 
-BotPlayer = PlayerInterface.extend({});
+BotPlayer = PlayerInterface.extend({
+    init: function() {
+        log.info('Bot created');
+    }
+});
 
 module.exports.HumanPlayer = HumanPlayer;
 module.exports.BotPlayer = BotPlayer;

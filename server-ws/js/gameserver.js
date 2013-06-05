@@ -7,8 +7,7 @@ var cls = require("./lib/class"),
 // ======= GAME SERVER ========
 
 module.exports = GameServer = cls.Class.extend({
-    init: function(id, websocketServer) {
-        this.id = id;
+    init: function(websocketServer) {
         this.server = websocketServer;
         this.containers = [];
         this.handlers = [];
@@ -32,60 +31,77 @@ module.exports = GameServer = cls.Class.extend({
                 updateCount = 0;
             }
         }, 1000 / this.ups);
-
-        log.info(""+this.id+" created");
     },
 
     setUpdatesPerSecond: function(ups) {
         this.ups = ups;
     },
 
-    sendCommand: function(command, args) {
-        var json = {
-            'command': command,
-            'args': args
-        }
-        return this.sendMessage(json);
+    sendCommand: function(ws, command, args) {
+        var json = [
+            command,
+            args
+        ];
+        return this.sendMessage(ws, json);
     },
 
-    sendMessage: function(json) {
+    sendMessage: function(ws, json) {
         var data;
-        if(this.connection.readyState === 1) {
-            if(this.useBison) {
-                data = BISON.encode(json);
-            } else {
-                data = JSON.stringify(json);
-            }
-            this.connection.send(data);
+        if(this.useBison) {
+            data = BISON.encode(json);
+        } else {
+            data = JSON.stringify(json);
         }
-
+        ws.send(data);
+        log.info('Sent: ' + data);
     },
 
-    receiveMessage: function(message) {
-        var data, action;
+    receiveMessage: function(ws, message) {
+        var data;
         if(this.useBison) {
             data = BISON.decode(message);
         } else {
             data = JSON.parse(message);
         }
+        log.info('Received: ' + message);
 
-        this.receiveAction(data[0], data[1]);
+        this.receiveAction(ws, data[0], data[1]);
     },
 
-    receiveAction: function(action, args) {
+    receiveAction: function(ws, action, args) {
         if(this.handlers[action] && _.isFunction(this.handlers[action])) {
-            this.handlers[action].call(this, args);
+            this.handlers[action].call(this, ws, args);
         }
         else {
             log.error("Unknown action : " + action);
         }
     },
 
-    receiveHello: function(args) {
-        log.info("Hello received");
-        this.containers.push(new containers.BotContainer());
+    receiveHello: function(ws, args) {
 
+        if (!('player_id' in (args || {}))) {
+            return this.sendError(ws, 'Please specify player_id');
+        }
+
+        var player_id = args['player_id'];
+
+        if (!this.playerCanStartGame(player_id)) {
+            return this.sendError('You are not allowed to play. Sorry.')
+        }
+
+        if ('with_bot' in args || {}) {
+            this.containers.push(new containers.BotContainer(undefined, this, player_id));
+        } else {
+            return this.sendError('Currently only bot games are available. Sorry.');
+        }
+    },
+
+    sendError: function(ws, reason) {
+        this.sendCommand(ws, Types.Messages.ERROR, reason);
+    },
+
+    playerCanStartGame: function(player_id) {
+        return true;
     }
-
 
 });

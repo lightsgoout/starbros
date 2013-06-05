@@ -23,7 +23,7 @@ function main(config) {
     server.on('connection', function(ws) {
         log.info('Someone connected');
         ws.on('message', function(message) {
-            game.receiveMessage(message);
+            game.receiveMessage(ws, message);
         });
     });
 

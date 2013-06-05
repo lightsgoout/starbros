@@ -3,20 +3,12 @@ define(['lib/bison', 'shared/js/gametypes'], function(BISON) {
 
     var GameClient = Class.extend({
         init: function(host, port) {
-            this.connection = null;
             this.host = host;
             this.port = port;
-
             this.useBison = false;
-            this.enable();
-        },
 
-        enable: function() {
-            this.isListening = true;
-        },
-
-        disable: function() {
-            this.isListening = false;
+            this.handlers = [];
+            this.handlers[Types.Messages.ERROR] = this.receiveError;
         },
 
         connect: function() {
@@ -51,13 +43,10 @@ define(['lib/bison', 'shared/js/gametypes'], function(BISON) {
         },
 
         sendHello: function(game_id) {
-
-            var self = this;
-
             if (!game_id) {
-                return self.sendCommand(Types.Messages.HELLO);
+                return this.sendCommand(Types.Messages.HELLO);
             } else {
-                return self.sendCommand(Types.Messages.HELLO, game_id);
+                return this.sendCommand(Types.Messages.HELLO, game_id);
             }
         },
 
@@ -78,38 +67,30 @@ define(['lib/bison', 'shared/js/gametypes'], function(BISON) {
                     data = JSON.stringify(json);
                 }
                 this.connection.send(data);
-                console.log('sent message');
+                console.log('Sent: ' + data);
             }
 
         },
 
         receiveMessage: function(message) {
-            var data, action;
+            var data;
 
-            if(this.isListening) {
-                if(this.useBison) {
-                    data = BISON.decode(message);
-                } else {
-                    data = JSON.parse(message);
-                }
+            if(this.useBison) {
+                data = BISON.decode(message);
+            } else {
+                data = JSON.parse(message);
+            }
 
-                console.log("data: " + message);
+            console.log("Received: " + message);
 
-                if(data instanceof Array) {
-                    if(data[0] instanceof Array) {
-                        // Multiple actions received
-                        this.receiveActionBatch(data);
-                    } else {
-                        // Only one action received
-                        this.receiveAction(data);
-                    }
-                }
+            if(data instanceof Array) {
+                this.receiveAction(data);
             }
         },
 
         receiveAction: function(data) {
             var action = data[0];
-            if(this.handlers[action] && _.isFunction(this.handlers[action])) {
+            if(this.handlers[action]) {
                 this.handlers[action].call(this, data);
             }
             else {
@@ -117,14 +98,9 @@ define(['lib/bison', 'shared/js/gametypes'], function(BISON) {
             }
         },
 
-        receiveActionBatch: function(actions) {
-            var self = this;
-
-            _.each(actions, function(action) {
-                self.receiveAction(action);
-            });
+        receiveError: function(data) {
+            console.log("Error: " + data[1]);
         }
-
     });
 
     return GameClient;
