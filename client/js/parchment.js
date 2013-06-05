@@ -54,7 +54,7 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'shared
                     this.imagesAdded++;
                 },
                 app: this
-            }
+            };
             IM.add('img/sun.png', 'sun');
             IM.add('img/planets.png', 'planets');
 

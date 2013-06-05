@@ -1,7 +1,7 @@
 define(['Point'], function(Point) {
 
     var MouseController = Class.extend({
-        init: function() {
+        init: function(element) {
             this.element = null;
             this.pos     = new Point(0, 0);
             this.pressed = false;
