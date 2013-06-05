@@ -7,8 +7,12 @@ var cls = require("./lib/class"),
 
 PlayerInterface = cls.Class.extend({
     init: function() {
-
+        log.info('Bot created');
     },
+
+    setStarPosition: function(x,y) {
+
+    }
 
 });
 
