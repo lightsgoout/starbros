@@ -89,15 +89,23 @@ module.exports = GameServer = cls.Class.extend({
             return this.sendError('You are not allowed to play. Sorry.')
         }
 
-        if ('with_bot' in args || {}) {
-            this.containers.push(new containers.BotContainer(undefined, this, player_id));
+        if ('with_bot' in (args || {})) {
+            var bot_difficulty = args['bot_difficulty'],
+                planets_count = args['planets_count'],
+                width = 1640,
+                height = 840,
+                container = new containers.BotContainer(
+                undefined, this, ws, player_id, bot_difficulty
+            );
+            container.setup(width, height, planets_count);
+            return this.containers.push(container);
         } else {
-            return this.sendError('Currently only bot games are available. Sorry.');
+            return this.sendError(ws, 'Currently only bot games are available. Sorry.');
         }
     },
 
     sendError: function(ws, reason) {
-        this.sendCommand(ws, Types.Messages.ERROR, reason);
+        return this.sendCommand(ws, Types.Messages.ERROR, reason);
     },
 
     playerCanStartGame: function(player_id) {

@@ -25,7 +25,8 @@ define(['lib/bison', 'shared/js/gametypes'], function(BISON) {
 
             this.connection.onopen = function(e) {
                 console.log("Connected to server "+self.host+":"+self.port);
-                self.sendHello();
+                var player_id = '123456';
+                self.sendHello(player_id, true);
             };
 
             this.connection.onmessage = function(e) {
@@ -42,11 +43,14 @@ define(['lib/bison', 'shared/js/gametypes'], function(BISON) {
             };
         },
 
-        sendHello: function(game_id) {
-            if (!game_id) {
+        sendHello: function(player_id, with_bot) {
+            if (!player_id) {
                 return this.sendCommand(Types.Messages.HELLO);
             } else {
-                return this.sendCommand(Types.Messages.HELLO, game_id);
+                return this.sendCommand(Types.Messages.HELLO, {
+                    player_id: player_id,
+                    with_bot: with_bot
+                });
             }
         },
 

@@ -16,8 +16,19 @@ HumanPlayer = PlayerInterface.extend({
 });
 
 BotPlayer = PlayerInterface.extend({
-    init: function() {
-        log.info('Bot created');
+
+    defaultDifficulty: Types.BotLevels.MEDIUM,
+
+    init: function(bot_difficulty) {
+        if (!bot_difficulty) {
+            bot_difficulty = this.defaultDifficulty;
+        }
+
+        if (!(bot_difficulty in Types.BotLevels)) {
+            log.error('Invalid difficulty: ' + bot_difficulty)
+            bot_difficulty = this.defaultDifficulty;
+        }
+        log.info('Bot created, difficulty: ' + bot_difficulty);
     }
 });
 
