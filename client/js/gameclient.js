@@ -1,5 +1,5 @@
 
-define(['lib/bison', 'shared/js/gametypes'], function(BISON) {
+define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchment) {
 
     var GameClient = Class.extend({
         init: function(host, port) {
@@ -9,6 +9,7 @@ define(['lib/bison', 'shared/js/gametypes'], function(BISON) {
 
             this.handlers = [];
             this.handlers[Types.Messages.ERROR] = this.receiveError;
+            this.handlers[Types.Messages.MAKE_WORLD] = this.receiveMakeWorld;
         },
 
         connect: function() {
@@ -104,6 +105,10 @@ define(['lib/bison', 'shared/js/gametypes'], function(BISON) {
 
         receiveError: function(data) {
             console.log("Error: " + data[1]);
+        },
+
+        receiveMakeWorld: function(width, height, planet_count) {
+            this.parchment = new Parchment(1640, 840);
         }
     });
 

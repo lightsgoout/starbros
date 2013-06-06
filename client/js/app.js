@@ -1,4 +1,4 @@
-define(['jquery', 'gameclient', 'config', 'parchment'], function($, GameClient, config, Parchment) {
+define(['jquery', 'gameclient', 'config'], function($, GameClient, config) {
 
     var App = Class.extend({
         init: function() {
@@ -6,7 +6,6 @@ define(['jquery', 'gameclient', 'config', 'parchment'], function($, GameClient, 
             this.host = this.config.host;
             this.port = this.config.port;
             this.connect();
-            this.parchment = new Parchment(1640, 840);
         },
 
         connect: function() {

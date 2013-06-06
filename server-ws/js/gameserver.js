@@ -95,13 +95,17 @@ module.exports = GameServer = cls.Class.extend({
                 width = 1640,
                 height = 840,
                 container = new containers.BotContainer(
-                undefined, this, ws, player_id, bot_difficulty
-            );
+                    undefined, this, ws, player_id, bot_difficulty
+                );
             container.setup(width, height, planets_count);
             return this.containers.push(container);
         } else {
             return this.sendError(ws, 'Currently only bot games are available. Sorry.');
         }
+    },
+
+    receiveMakeWorld: function(width, height, planets_count) {
+
     },
 
     sendError: function(ws, reason) {
