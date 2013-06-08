@@ -1,13 +1,13 @@
 
-var fs = require('fs');
+var fs = require('fs'),
+    WebSocketServer = require('ws').Server;
 
 
 function main(config) {
-    var ws = require("./ws"),
-        GameServer = require("./game"),
+    var GameServer = require("./gameserver"),
         Log = require('log'),
-        server = new ws.MultiVersionWebsocketServer(config.port),
-        worlds = [];
+        server = new WebSocketServer({port: '8005'}),
+        game = new GameServer(server);
 
     switch(config.debug_level) {
         case "error":
@@ -16,27 +16,37 @@ function main(config) {
             log = new Log(Log.DEBUG); break;
         case "info":
             log = new Log(Log.INFO); break;
-    };
+    }
 
     log.info("Starting StarBros game server...");
 
-    server.onConnect(function(connection) {
-        log.info("Someone connected");
-        var world, // the one in which the player will be spawned
-            connect = function() {
-                if(world) {
-                    world.connect_callback(new Player(connection, world));
-                }
-            };
+    server.on('connection', function(ws) {
+        log.info('Someone connected');
+        ws.on('message', function(message) {
+            game.receiveMessage(ws, message);
+        });
     });
 
-    server.onError(function() {
-        log.error(Array.prototype.join.call(arguments, ", "));
-    });
+
+
+//    server.onConnect(function(connection) {
+//        log.info("Someone connected");
+//
+//        var game = new GameServer(123123, server);
+//    });
+
+//    server.onError(function() {
+//        log.error(Array.prototype.join.call(arguments, ", "));
+//    });
 
     process.on('uncaughtException', function (e) {
         log.error('uncaughtException: ' + e);
     });
+
+//    server.on('message', function(message) {
+//        console.log(message);
+//    })
+
 }
 
 function getConfigFile(path, callback) {

@@ -1,26 +1,18 @@
 
-define(['lib/bison'], function(BISON) {
+define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchment) {
 
     var GameClient = Class.extend({
         init: function(host, port) {
-            this.connection = null;
             this.host = host;
             this.port = port;
-
-            this.connected_callback = null;
             this.useBison = false;
-            this.enable();
+
+            this.handlers = [];
+            this.handlers[Types.Messages.ERROR] = this.receiveError;
+            this.handlers[Types.Messages.MAKE_WORLD] = this.receiveMakeWorld;
         },
 
-        enable: function() {
-            this.isListening = true;
-        },
-
-        disable: function() {
-            this.isListening = false;
-        },
-
-        connect: function(dispatcherMode) {
+        connect: function() {
             var url = "ws://"+ this.host +":"+ this.port +"/",
                 self = this;
 
@@ -32,55 +24,43 @@ define(['lib/bison'], function(BISON) {
                 this.connection = new WebSocket(url);
             }
 
-            if(dispatcherMode) {
-                this.connection.onmessage = function(e) {
-                    var reply = JSON.parse(e.data);
+            this.connection.onopen = function(e) {
+                console.log("Connected to server "+self.host+":"+self.port);
+                var player_id = '123456';
+                self.sendHello(player_id, true);
+            };
 
-                    if(reply.status === 'OK') {
-                        self.dispatched_callback(reply.host, reply.port);
-                    } else if(reply.status === 'FULL') {
-                        alert("BrowserQuest is currently at maximum player population. Please retry later.");
-                    } else {
-                        alert("Unknown error while connecting to BrowserQuest.");
-                    }
-                };
+            this.connection.onmessage = function(e) {
+                self.receiveMessage(e.data);
+            };
+
+            this.connection.onerror = function(e) {
+                console.log(e, true);
+            };
+
+            this.connection.onclose = function() {
+                console.log("Connection closed");
+                $('#container').addClass('error');
+            };
+        },
+
+        sendHello: function(player_id, with_bot) {
+            if (!player_id) {
+                return this.sendCommand(Types.Messages.HELLO);
             } else {
-                this.connection.onopen = function(e) {
-                    console.log("Connected to server "+self.host+":"+self.port);
-                };
-
-                this.connection.onmessage = function(e) {
-                    if(e.data === "go") {
-                        if(self.connected_callback) {
-                            self.connected_callback();
-                        }
-                        return;
-                    }
-                    if(e.data === 'timeout') {
-                        self.isTimeout = true;
-                        return;
-                    }
-
-                    self.receiveMessage(e.data);
-                };
-
-                this.connection.onerror = function(e) {
-                    console.log(e, true);
-                };
-
-                this.connection.onclose = function() {
-                    console.log("Connection closed");
-                    $('#container').addClass('error');
-
-                    if(self.disconnected_callback) {
-                        if(self.isTimeout) {
-                            self.disconnected_callback("You have been disconnected for being inactive for too long");
-                        } else {
-                            self.disconnected_callback("The connection to BrowserQuest has been lost");
-                        }
-                    }
-                };
+                return this.sendCommand(Types.Messages.HELLO, {
+                    player_id: player_id,
+                    with_bot: with_bot
+                });
             }
+        },
+
+        sendCommand: function(command, args) {
+            var json = [
+                command,
+                args
+            ];
+            return this.sendMessage(json);
         },
 
         sendMessage: function(json) {
@@ -92,36 +72,30 @@ define(['lib/bison'], function(BISON) {
                     data = JSON.stringify(json);
                 }
                 this.connection.send(data);
+                console.log('Sent: ' + data);
             }
+
         },
 
         receiveMessage: function(message) {
-            var data, action;
+            var data;
 
-            if(this.isListening) {
-                if(this.useBison) {
-                    data = BISON.decode(message);
-                } else {
-                    data = JSON.parse(message);
-                }
+            if(this.useBison) {
+                data = BISON.decode(message);
+            } else {
+                data = JSON.parse(message);
+            }
 
-                console.log("data: " + message);
+            console.log("Received: " + message);
 
-                if(data instanceof Array) {
-                    if(data[0] instanceof Array) {
-                        // Multiple actions received
-                        this.receiveActionBatch(data);
-                    } else {
-                        // Only one action received
-                        this.receiveAction(data);
-                    }
-                }
+            if(data instanceof Array) {
+                this.receiveAction(data);
             }
         },
 
         receiveAction: function(data) {
             var action = data[0];
-            if(this.handlers[action] && _.isFunction(this.handlers[action])) {
+            if(this.handlers[action]) {
                 this.handlers[action].call(this, data);
             }
             else {
@@ -129,14 +103,13 @@ define(['lib/bison'], function(BISON) {
             }
         },
 
-        receiveActionBatch: function(actions) {
-            var self = this;
+        receiveError: function(data) {
+            console.log("Error: " + data[1]);
+        },
 
-            _.each(actions, function(action) {
-                self.receiveAction(action);
-            });
+        receiveMakeWorld: function(width, height, planet_count) {
+            this.parchment = new Parchment(1640, 840);
         }
-
     });
 
     return GameClient;

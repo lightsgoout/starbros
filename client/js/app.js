@@ -1,19 +1,16 @@
-define(['jquery', 'gameclient'], function($, GameClient) {
+define(['jquery', 'gameclient', 'config'], function($, GameClient, config) {
 
     var App = Class.extend({
         init: function() {
-            this.start();
+            this.config = config.dev;
+            this.host = this.config.host;
+            this.port = this.config.port;
             this.connect();
         },
 
         connect: function() {
             this.client = new GameClient(this.host, this.port);
             this.client.connect();
-        },
-
-        start: function() {
-            this.host = '127.0.0.1';
-            this.port = '8005';
         }
     });
 
