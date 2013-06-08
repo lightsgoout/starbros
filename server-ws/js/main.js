@@ -27,25 +27,9 @@ function main(config) {
         });
     });
 
-
-
-//    server.onConnect(function(connection) {
-//        log.info("Someone connected");
-//
-//        var game = new GameServer(123123, server);
-//    });
-
-//    server.onError(function() {
-//        log.error(Array.prototype.join.call(arguments, ", "));
-//    });
-
     process.on('uncaughtException', function (e) {
         log.error('uncaughtException: ' + e);
     });
-
-//    server.on('message', function(message) {
-//        console.log(message);
-//    })
 
 }
 
