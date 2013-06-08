@@ -21,7 +21,8 @@ GameContainer = cls.Class.extend({
         }
 
         this.createWorld(width, height, planets_count);
-        this.createStar(this.left_player, 'sun.png');
+        this.createStar(this.left_player, Types.Positions.LEFT, 'sun.png');
+        this.createStar(this.right_player, Types.Positions.RIGHT, 'sun.png');
     },
     createWorld: function(width, height, planets_count) {
         this.game_server.sendCommand(this.ws, Types.Messages.MAKE_WORLD, {
@@ -30,12 +31,11 @@ GameContainer = cls.Class.extend({
             planets_count: planets_count,
         });
     },
-    createStar: function(player, sprite, x, y) {
+    createStar: function(player, position, sprite) {
         this.game_server.sendCommand(this.ws, Types.Messages.MAKE_STAR, {
             player_id: player.id,
             sprite: sprite,
-            x: x,
-            y: y
+            position: position
         });
     }
 });
