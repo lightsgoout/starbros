@@ -3,52 +3,57 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'shared
 
     var Parchment = Class.extend({
         init: function(width, height) {
+            this.initRunTime = new Date();
             this.first_planets = [];
             this.second_planets = [];
             this.planets = [];
-            this.canvas;
-            this.ctx;
-            this.mouse;
-
+            this.canvas = null;
+            this.ctx = null;
+            this.mouse = null;
             this.divExists = false;
             this.width  = width;
             this.height = height;
             this._resources = {};
-            this.initStuff();
+            try {
+                this.initCanvas();
+                this.initResources();
+                this.initMouse();
+                //this.initStuff();
+            } catch (err) {
+                console.log('Initialization error: ' + err);
+                document.body.innerHTML = '<center>' + err + '</center>';
+            }
         },
 
-        initStuff: function() {
-            var initRunTime = new Date();
+        initCanvas: function() {
             this.canvas = document.createElement('canvas');
             $(this.canvas).appendTo("#application");
             this.canvas.width  = this.width;
             this.canvas.height = this.height;
             if (!this.canvas.getContext('2d')) {
-                document.body.innerHTML = '<center>No support 2d context.</center>';
-                return false;
+                throw "No canvas support";
             }
             this.ctx = this.canvas.getContext('2d');
             this.ctx.font = '16px monospace';
             this.ctx.textAlign = 'center';
+        },
 
-            var firstCenter = new Point(this.canvas.width / 4, this.canvas.height / 2);
-            var secondCenter = new Point((this.canvas.width / 4) * 3, this.canvas.height / 2);
-            this.mouse = new MouseController(this.canvas);
-
+        initResources: function() {
+            var self  = this;
             var IM = {
                 store: this._resources,
                 imagesAdded: 0,
                 imagesLoaded: 0,
                 add: function(url, name) {
-                    var self  = this;
                     var image = new Image();
+                    var im = this;
                     image.onload = function() {
-                        self.imagesLoaded++;
-                        if (self.imagesAdded == self.imagesLoaded) {
-                            self.app.render(new Date());
-                            console.log('init complete over ' + (new Date() - initRunTime) + 'ms');
+                        im.imagesLoaded++;
+                        if (im.imagesAdded == im.imagesLoaded) {
+                            im.app.render(new Date());
+                            console.log('Resources loaded in ' + (new Date() - self.initRunTime) + 'ms');
                         }
-                    }
+                    };
                     image.src = url;
                     this.store[name] = image;
                     this.imagesAdded++;
@@ -57,6 +62,21 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'shared
             };
             IM.add('img/sun.png', 'sun');
             IM.add('img/planets.png', 'planets');
+        },
+
+        initMouse: function() {
+            this.mouse = new MouseController(this.canvas);
+        },
+
+        makeStar: function(player_id, sprite) {
+
+        },
+
+        initStuff: function() {
+
+
+            var firstCenter = new Point(this.canvas.width / 4, this.canvas.height / 2);
+            var secondCenter = new Point((this.canvas.width / 4) * 3, this.canvas.height / 2);
 
             var firstOrbit  = new Orbit(firstCenter.clone(), 0).setProperty({
                 ctx:   this.ctx,
@@ -120,13 +140,6 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'shared
                 time += 20;
             }
         },
-
-//        wait: function() {
-//            var self = this;
-//            window.onload = function() {
-//                self.init(self.width, self.height);
-//            }
-//        },
 
         render: function(lastTime, player) {
             var curTime = new Date();
@@ -218,31 +231,14 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'shared
                 firstPlanets[showFirstInfo].drawBorder();
                 document.body.style.cursor = 'pointer';
             } else {
-            if (showSecondInfo > 0) {
-                secondPlanets[showSecondInfo].showInfo();
-                secondPlanets[showSecondInfo].drawBorder();
-                document.body.style.cursor = 'pointer';
-            } else {
-                document.body.style.cursor = 'default';
-            }}
-    //        if(firstPlanets[i].detail){
-    //
-    //        }
-    //        if (showFirstDetail > -1) {
-    //            firstPlanets[showFirstDetail].detailInfo();
-    //            //firstPlanets[showFirstDeatail].drawBorder();
-    //            document.body.style.cursor = 'pointer';
-    //        } else {
-    //            document.body.style.cursor = 'default';
-    //        }
-    //
-    //        if (showSecondDetail > -1) {
-    //            secondPlanets[showSecondDetail].detailInfo();
-    //            //firstPlanets[showFirstDeatail].drawBorder();
-    //            document.body.style.cursor = 'pointer';
-    //        } else {
-    //            document.body.style.cursor = 'default';
-    //        }
+                if (showSecondInfo > 0) {
+                    secondPlanets[showSecondInfo].showInfo();
+                    secondPlanets[showSecondInfo].drawBorder();
+                    document.body.style.cursor = 'pointer';
+                } else {
+                    document.body.style.cursor = 'default';
+                }
+            }
             mouse.pressed = false;
         }
     });
