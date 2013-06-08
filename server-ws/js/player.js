@@ -20,6 +20,8 @@ BotPlayer = PlayerInterface.extend({
     defaultDifficulty: Types.BotLevels.MEDIUM,
 
     init: function(bot_difficulty) {
+        this.id = 'bot';
+
         if (!bot_difficulty) {
             bot_difficulty = this.defaultDifficulty;
         }

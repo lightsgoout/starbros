@@ -20,6 +20,10 @@ Types = {
         3: 'Three planets',
         6: 'Six planets',
         9: 'Nine planets'
+    },
+    Positions: {
+        LEFT: 'left',
+        RIGHT: 'right'
     }
 };
 
