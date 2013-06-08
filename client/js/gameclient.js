@@ -10,6 +10,7 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
             this.handlers = [];
             this.handlers[Types.Messages.ERROR] = this.receiveError;
             this.handlers[Types.Messages.MAKE_WORLD] = this.receiveMakeWorld;
+            this.parchment = null;
         },
 
         connect: function() {
@@ -109,6 +110,12 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
 
         receiveMakeWorld: function(width, height, planet_count) {
             this.parchment = new Parchment(1640, 840);
+        },
+
+        receiveMakeStar: function(player_id, sprite) {
+            if (this.parchment) {
+                this.parchment.makeStar(player_id, sprite);
+            }
         }
     });
 
