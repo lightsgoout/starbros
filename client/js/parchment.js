@@ -2,11 +2,14 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'shared
     function(MouseController, Orbit, Planet, Point, System, Tile) {
 
     var Parchment = Class.extend({
-        init: function(width, height) {
+        init: function(width, height, planet_count) {
             this.initRunTime = new Date();
             this.first_planets = [];
             this.second_planets = [];
             this.planets = [];
+            this.star_data = [];
+            this.planet_data =[];
+            this.planet_count = planet_count;
             this.canvas = null;
             this.ctx = null;
             this.mouse = null;
@@ -18,7 +21,8 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'shared
                 this.initCanvas();
                 this.initResources();
                 this.initMouse();
-                //this.initStuff();
+                this.initStuff();
+                this.render(this.initRunTime);
             } catch (err) {
                 console.log('Initialization error: ' + err);
                 document.body.innerHTML = '<center>' + err + '</center>';
@@ -68,13 +72,27 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'shared
             this.mouse = new MouseController(this.canvas);
         },
 
-        makeStar: function(player_id, sprite) {
-
+        makeStar: function(player_id, sprite, position, name) {
+            var arr = [];
+            arr['name'] = name;
+            arr['player_id'] = player_id;
+            arr['sprite'] = sprite;
+            arr['position'] = position;
+            this.star_data[position] = arr;
         },
 
+        makePlanet: function(player_id, sprite, speed, richness, name){
+            var arr = [];
+            arr['player_id'] = player_id;
+            arr['sprite'] = sprite;
+            arr['speed'] = speed;
+            arr['richness'] = richness;
+            arr['name'] = name;
+            this.planet_data[name] = arr;
+        },
         initStuff: function() {
 
-
+            var orbitWidth = 320/this.planet_count;
             var firstCenter = new Point(this.canvas.width / 4, this.canvas.height / 2);
             var secondCenter = new Point((this.canvas.width / 4) * 3, this.canvas.height / 2);
 
@@ -105,12 +123,11 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'shared
                 'Carme', 'Ananke', 'Leda', 'Thebe', 'Adrastea', 'Metis', 'Callirrhoe', 'Themisto',
                 '1975', '2000', 'Megaclite', 'Taygete', 'Chaldene', 'Harpalyke'];
             var tiles = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-            var time  = 40;
+            var time  = Math.ceil(Math.random()*30 + 20);
             shuffle(names);
             shuffle(tiles);
-
-            for (var i = 0; i < 12; ++i) {
-                firstOrbit  = new Orbit(firstCenter.clone(), 90+i*26).setProperty({
+            for (var i = 0; i < this.planet_count; ++i) {
+                firstOrbit  = new Orbit(firstCenter.clone(), 90+i*orbitWidth).setProperty({
                     ctx:   this.ctx,
                     mouse: this.mouse
                 }, true);
@@ -120,14 +137,14 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'shared
                     ctx:  this.ctx
                 }, true);
                 this.first_planets.push(firstPlanet);
-                time += 20;
+                time += Math.ceil(Math.random()*10 + 20);
             }
             shuffle(names);
             shuffle(tiles);
-            time  = 40;
+            time  = Math.ceil(Math.random()*30 + 20);;
 
-            for (var i = 0; i < 12; ++i) {
-                secondOrbit  = new Orbit(secondCenter.clone(), 90+i*26).setProperty({
+            for (var i = 0; i < this.planet_count; ++i) {
+                secondOrbit  = new Orbit(secondCenter.clone(), 90+i*orbitWidth).setProperty({
                     ctx:   this.ctx,
                     mouse: this.mouse
                 }, true);
@@ -137,11 +154,11 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'shared
                     ctx:  this.ctx
                 }, true);
                 this.second_planets.push(secondPlanet);
-                time += 20;
+                time += Math.ceil(Math.random()*10 + 20);
             }
         },
 
-        render: function(lastTime, player) {
+        render: function(lastTime) {
             var curTime = new Date();
             var self    = this,
                 ctx     = this.ctx,
@@ -158,7 +175,7 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'shared
             var showSecondInfo = -1;
            //var showSecondDetail = -1;
 
-            for (var i = 0, il = firstPlanets.length; i < il; ++i) {
+            for (var i = 0, il = this.planet_count; i <= il; ++i) {
                 firstPlanets[i].orbit.draw();
                 firstPlanets[i].render(curTime - lastTime);
                 if (Math.abs(firstPlanets[i].pos.x - mouse.pos.x) < firstPlanets[i].radius
@@ -192,7 +209,7 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'shared
                 }
             }
 
-            for (var i = 0, il = secondPlanets.length; i < il; ++i) {
+            for (var i = 0, il = this.planet_count; i <= il; ++i) {
                 secondPlanets[i].orbit.draw();
                 secondPlanets[i].render(curTime - lastTime);
                 if (Math.abs(secondPlanets[i].pos.x - mouse.pos.x) < secondPlanets[i].radius

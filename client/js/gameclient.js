@@ -9,7 +9,9 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
 
             this.handlers = [];
             this.handlers[Types.Messages.ERROR] = this.receiveError;
+            this.handlers[Types.Messages.MAKE_STAR] = this.receiveMakeStar;
             this.handlers[Types.Messages.MAKE_WORLD] = this.receiveMakeWorld;
+            this.handlers[Types.Messages.MAKE_PLANET] = this.receiveMakePlanet;
             this.parchment = null;
         },
 
@@ -97,7 +99,7 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
         receiveAction: function(data) {
             var action = data[0];
             if(this.handlers[action]) {
-                this.handlers[action].call(this, data);
+                this.handlers[action].call(this, data[1]);
             }
             else {
                 console.log("Unknown action : " + action);
@@ -108,13 +110,31 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
             console.log("Error: " + data[1]);
         },
 
-        receiveMakeWorld: function(width, height, planet_count) {
-            this.parchment = new Parchment(1640, 840);
+        receiveMakeWorld: function(data) {
+            var width = data['width'];
+            var height = data['height'];
+            var planet_count = data['planets_count'];
+            this.parchment = new Parchment(width, height, planet_count);
         },
 
-        receiveMakeStar: function(player_id, sprite) {
+        receiveMakeStar: function(data) {
+            var player_id = data['player_id'];
+            var sprite = data['sprite'];
+            var position = data['position'];
+            var name = data['name'];
             if (this.parchment) {
-                this.parchment.makeStar(player_id, sprite);
+                this.parchment.makeStar(player_id, sprite, position, name);
+            }
+        },
+
+        receiveMakePlanet: function(data){
+            var player_id = data['player_id'];
+            var sprite = data['sprite'];
+            var speed = data['speed'];
+            var richness = data['richness'];
+            var name = data['name'];
+            if (this.parchment) {
+                this.parchment.makePlanet(player_id, sprite, speed, richness, name);
             }
         }
     });
