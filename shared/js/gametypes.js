@@ -17,13 +17,26 @@ Types = {
         HARD: 'HARD'
     },
     SystemSizes: {
-        3: 'Three planets',
-        6: 'Six planets',
-        9: 'Nine planets'
+        s3: 3,
+        s6: 6,
+        s9: 9
     },
     Positions: {
         LEFT: 'left',
         RIGHT: 'right'
+    },
+    Richness: {
+        POOR: 0.7,
+        AVERAGE: 1.0,
+        RICH: 1.5
+    },
+    PlanetSizes: {
+        SMALL: 10000,
+        AVERAGE: 30000,
+        LARGE: 80000
+    },
+    StarSprites: {
+        s0: 'sun.png'
     }
 };
 
