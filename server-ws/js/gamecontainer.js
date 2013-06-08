@@ -21,17 +21,13 @@ function shuffle(array) {
 
 GameContainer = cls.Class.extend({
 
-    names: ['Moon', 'Phobos', 'Deimos', 'Dactyl', 'Linus', 'Io', 'Europa', 'Ganymede',
-        'Callisto', 'Amalthea', 'Himalia', 'Elara', 'Pasiphae', 'Taurus', 'Sinope', 'Lysithea',
-        'Carme', 'Ananke', 'Leda', 'Thebe', 'Adrastea', 'Metis', 'Callirrhoe', 'Themisto',
-        '1975', '2000', 'Megaclite', 'Taygete', 'Chaldene', 'Harpalyke'],
-
     getRandomName: function() {
         shuffle(this.names);
         return this.names.pop();
     },
 
     init: function(id, gameServer, ws) {
+
         this.id = id;
         this.game_server = gameServer;
         this.ws = ws;
@@ -40,6 +36,11 @@ GameContainer = cls.Class.extend({
     },
 
     setup: function(width, height, planets_count) {
+
+        this.names = ['Moon', 'Phobos', 'Deimos', 'Dactyl', 'Linus', 'Io', 'Europa', 'Ganymede',
+        'Callisto', 'Amalthea', 'Himalia', 'Elara', 'Pasiphae', 'Taurus', 'Sinope', 'Lysithea',
+        'Carme', 'Ananke', 'Leda', 'Thebe', 'Adrastea', 'Metis', 'Callirrhoe', 'Themisto',
+        '1975', '2000', 'Megaclite', 'Taygete', 'Chaldene', 'Harpalyke'];
 
         if (!(planets_count in Types.SystemSizes)) {
             log.error('Invalid planets_count: ' + planets_count);
