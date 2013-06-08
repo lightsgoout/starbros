@@ -71,8 +71,11 @@ Planet.prototype = {
         }
     },
     planetInfo: function(){
+        $('#closebutton').click(function(){
+            $('#closebutton').remove();
+        });
         var str = ''
-        //str += '<div id="closeButton" onclick="del()">Х</div>';
+        str += '<div id="closeButton" >Х</div>';
         str += '<h3>' + this.name + '</h3>';
         str += '<p>Mines level :' + this.mines + '</p>';
         str += '<p>Fire power :' + this.power + '</p>';
