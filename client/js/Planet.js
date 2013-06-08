@@ -72,7 +72,7 @@ define(['Point'], function(Point) {
         },
         planetInfo: function(){
             var str = ''
-            //str += '<div id="closeButton" onclick="del()">Х</div>';
+            //str += '<div id="closeButton">X</div>';
             str += '<h3>' + this.name + '</h3>';
             str += '<p>Mines level :' + this.mines + '</p>';
             str += '<p>Fire power :' + this.power + '</p>';
