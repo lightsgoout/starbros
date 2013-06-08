@@ -37,6 +37,9 @@ Types = {
     },
     StarSprites: {
         s0: 'sun.png'
+    },
+    SpeedRatio: {
+        PLANET: 50000
     }
 };
 
