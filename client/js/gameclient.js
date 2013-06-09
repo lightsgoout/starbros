@@ -148,6 +148,7 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
             var resources = data.resources;
             var workout = data.workout;
             if (this.parchment) {
+                // todo: only human player
                 this.parchment.updateHUD(position, resources, workout);
             }
         },
