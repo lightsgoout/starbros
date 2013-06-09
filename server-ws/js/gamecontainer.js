@@ -105,6 +105,7 @@ GameContainer = cls.Class.extend({
             var size = null;
             var richness = null;
             var sprite = null;
+            var angle = ~~(Math.random() * 360);
 
             shuffle(sizes);
             size = sizes.pop();
@@ -135,11 +136,12 @@ GameContainer = cls.Class.extend({
                 sprite,
                 speed,
                 richness,
-                this.getRandomName()
+                this.getRandomName(),
+                angle
             );
         }
     },
-    createPlanet: function(id, player, sprite, speed, richness, name) {
+    createPlanet: function(id, player, sprite, speed, richness, name, angle) {
 
         var planet_data = {
             id: id,
@@ -147,7 +149,8 @@ GameContainer = cls.Class.extend({
             sprite: sprite,
             speed: speed,
             richness: richness,
-            name: name
+            name: name,
+            angle: angle
         };
 
         this._planets.push(planet_data);
@@ -156,8 +159,11 @@ GameContainer = cls.Class.extend({
 
     run: function() {
         var self = this;
+        var lastTime = new Date();
+        var curTime = new Date();
         setInterval(function() {
-            self.process();
+            self.update(curTime - lastTime);
+            lastTime = curTime;
         }, 1000 / this.ups);
     },
 
@@ -165,13 +171,16 @@ GameContainer = cls.Class.extend({
         this.ups = ups;
     },
 
-    process: function() {
-        this.processPlanets();
+    update: function(deltaTime) {
+        this.updatePlanets(deltaTime);
     },
 
-    processPlanets: function() {
+    updatePlanets: function(dektaTime) {
         for (var i = 0; i < this._planets.length, i++;) {
             var planet = this._planets[i];
+            this.pos.x = this.orbit.center.x + this.orbit.radius * Math.cos(this.angle);
+            this.pos.y = this.orbit.center.y + this.orbit.radius * Math.sin(this.angle);
+            this.angle += this.speed * deltaTime;
 
         }
     }
@@ -186,7 +195,7 @@ BotContainer = GameContainer.extend({
         this.left_player = new player.HumanPlayer(player_id);
         this.right_player = new player.BotPlayer(bot_difficulty);
     }
-})
+});
 
 module.exports.GameContainer = GameContainer;
 module.exports.BotContainer = BotContainer;
