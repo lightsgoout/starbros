@@ -99,6 +99,35 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
 
         },
 
+        updateRockets: function(deltaTime){
+            for (var i = 0; i < this.rockets.length; i++){
+                var x = false;
+                var y = false;
+                var deltaLength = this.rockets[i].speed * deltaTime;
+                var planet_x = this.planets[this.rockets[i].target_id].pos.x;
+                var triger_x = planet_x - this.rockets[i].pos.x;
+                if (Math.abs(triger_x) <= deltaLength ){
+                    this.rockets[i].pos.x = planet_x;
+                    x = true;
+                }else if(triger_x < 0){
+                    this.rockets[i].pos.x -= deltaLength;
+                }else{
+                    this.rockets[i].pos.x += deltaLength;
+                }
+                var planet_y = this.planets[this.rockets[i].target_id].pos.y;
+                var triger_y =planet_y - this.rockets[i].pos.y;
+                if (Math.abs(triger_y) <= deltaLength ){
+                    this.rockets[i].pos.y = planet_y;
+                    y = true;
+                }else if(triger_y < 0){
+                    this.rockets[i].pos.y -= deltaLength;
+                }else{
+                    this.rockets[i].pos.y += deltaLength;
+                }
+                this.rockets[i].life_time -= deltaTime;
+            }
+        },
+
         makePlanet: function(player_id, sprite, speed, richness, name, planet_id, angle){
             if (this.stars[player_id].position === Types.Positions.LEFT){
                 var center = this.leftCenter;
