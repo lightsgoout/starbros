@@ -1,5 +1,5 @@
-define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star', 'shared/js/gametypes'],
-    function(MouseController, Orbit, Planet, Point, System, Tile, Star) {
+define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star', 'Rocket', 'shared/js/gametypes'],
+    function(MouseController, Orbit, Planet, Point, System, Tile, Star, Rocket) {
 
     var Parchment = Class.extend({
         init: function(width, height, planet_count) {
@@ -9,6 +9,7 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
             this.planets = {};
             this.stars = {};
             this.rockets = [];
+            this.hole = [];
             this.planet_count = planet_count;
             this.canvas = null;
             this.ctx = null;
@@ -74,6 +75,7 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
             };
             IM.add('img/sun.png', 'sun.png');
             IM.add('img/planets.png', 'planets');
+            IM.add('img/rocket.png', 'rockets');
         },
 
         initMouse: function() {
@@ -101,30 +103,55 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
 
         updateRockets: function(deltaTime){
             for (var i = 0; i < this.rockets.length; i++){
-                var x = false;
-                var y = false;
-                var deltaLength = this.rockets[i].speed * deltaTime;
-                var planet_x = this.planets[this.rockets[i].target_id].pos.x;
-                var triger_x = planet_x - this.rockets[i].pos.x;
-                if (Math.abs(triger_x) <= deltaLength ){
-                    this.rockets[i].pos.x = planet_x;
-                    x = true;
-                }else if(triger_x < 0){
-                    this.rockets[i].pos.x -= deltaLength;
+                if(typeof (this.rockets[i]) !== 'undefined'){
+                    var x = false;
+                    var y = false;
+                    var deltaLength = this.rockets[i].speed * deltaTime;
+                    var planet_x = this.planets[this.rockets[i].target_id].pos.x;
+                    var triger_x = planet_x - this.rockets[i].pos.x;
+                    if (Math.abs(triger_x) <= deltaLength ){
+                        this.rockets[i].pos.x = planet_x;
+                        x = true;
+                    }else if(triger_x < 0){
+                        this.rockets[i].pos.x -= deltaLength;
+                    }else{
+                        this.rockets[i].pos.x += deltaLength;
+                    }
+                    var planet_y = this.planets[this.rockets[i].target_id].pos.y;
+                    var triger_y =planet_y - this.rockets[i].pos.y;
+                    if (Math.abs(triger_y) <= deltaLength ){
+                        this.rockets[i].pos.y = planet_y;
+                        y = true;
+                    }else if(triger_y < 0){
+                        this.rockets[i].pos.y -= deltaLength;
+                    }else{
+                        this.rockets[i].pos.y += deltaLength;
+                    }
+                    this.rockets[i].life_time -= deltaTime;
+                    if (this.rockets[i].life_time <= 0){
+                        delete(this.rockets[i]);
+                    }
                 }else{
-                    this.rockets[i].pos.x += deltaLength;
+                    this.hole.push(i);
                 }
-                var planet_y = this.planets[this.rockets[i].target_id].pos.y;
-                var triger_y =planet_y - this.rockets[i].pos.y;
-                if (Math.abs(triger_y) <= deltaLength ){
-                    this.rockets[i].pos.y = planet_y;
-                    y = true;
-                }else if(triger_y < 0){
-                    this.rockets[i].pos.y -= deltaLength;
-                }else{
-                    this.rockets[i].pos.y += deltaLength;
-                }
-                this.rockets[i].life_time -= deltaTime;
+            }
+        },
+
+        fireRocket: function(planet_id, target_id){
+            var speed = this.planets[planet_id].rocket_speed;
+            var player_id = this.planets[planet_id].player_id;
+            var power = this.planets[planet_id].rockets_power;
+            var life_time = this.planets[planet_id].rocket_life_time;
+            var rocket = new Rocket(speed, player_id, power, target_id, life_time);
+            rocket.setProperty({
+                tile: new Tile(this.ctx, this._resources['rockets'], 0, 0, 2, 2),
+                ctx: this.ctx
+            });
+            var space = this.hole.pop();
+            if(typeof(space) !== 'undefined'){
+                this.rockets[space] = rocket;
+            }else{
+                this.rockets.push(rocket);
             }
         },
 
@@ -208,6 +235,11 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
                             }
                         }
                     }
+                }
+            }
+            for (var i = 0; i < this.rockets.length; i++){
+                if(typeof (this.rockets[i]) !== 'undefined'){
+                    this.rockets[i].render();
                 }
             }
 
