@@ -36,6 +36,7 @@ GameContainer = cls.Class.extend({
 
     setup: function(width, height, planets_count) {
 
+        this.sync_interval = 20000;
         this.ups = 50;
         this._planets = [];
         this._stars = [];
@@ -165,6 +166,9 @@ GameContainer = cls.Class.extend({
             self.update(curTime - lastTime);
             lastTime = curTime;
         }, 1000 / this.ups);
+        setInterval(function() {
+            self.syncState();
+        }, self.sync_interval);
     },
 
     setUpdatesPerSecond: function(ups) {
@@ -175,14 +179,18 @@ GameContainer = cls.Class.extend({
         this.updatePlanets(deltaTime);
     },
 
-    updatePlanets: function(dektaTime) {
+    updatePlanets: function(deltaTime) {
         for (var i = 0; i < this._planets.length, i++;) {
             var planet = this._planets[i];
-            this.pos.x = this.orbit.center.x + this.orbit.radius * Math.cos(this.angle);
-            this.pos.y = this.orbit.center.y + this.orbit.radius * Math.sin(this.angle);
-            this.angle += this.speed * deltaTime;
-
+            planet.angle += planet.speed * deltaTime;
         }
+    },
+
+    syncState: function() {
+        var sync_data = {
+            planets: this._planets
+        };
+        this.game_server.sendCommand(this.ws, Types.Messages.SYNC, sync_data);
     }
 
 });
