@@ -153,7 +153,18 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
         },
 
         onSync: function(data){
-
+            for (var i = 0; i < data['planets'].length; i++){
+                var player_id = data['planets'][i]['player_id'];
+                var sprite = data['planets'][i]['sprite'];
+                var speed = data['planets'][i]['speed'];
+                var richness = data['planets'][i]['richness'];
+                var name = data['planets'][i]['name'];
+                var planet_id = data['planets'][i]['id'];
+                var angle = data['planets'][i]['angle'];
+                if (this.parchment) {
+                    this.parchment.syncPlanet(player_id, sprite, speed, richness, name, planet_id, angle);
+                }
+            }
         }
     });
 
