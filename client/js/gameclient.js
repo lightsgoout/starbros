@@ -13,6 +13,7 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
             this.handlers[Types.Messages.MAKE_STAR] = this.receiveMakeStar;
             this.handlers[Types.Messages.MAKE_WORLD] = this.receiveMakeWorld;
             this.handlers[Types.Messages.MAKE_PLANET] = this.receiveMakePlanet;
+            this.handlers[Types.Messages.INIT_PLAYER] = this.receiveInitPlayer;
             this.parchment = null;
         },
 
@@ -76,7 +77,7 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
                     data = JSON.stringify(json);
                 }
                 this.connection.send(data);
-                console.log('Sent: ' + data);
+                //console.log('Sent: ' + data);
             }
 
         },
@@ -90,7 +91,7 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
                 data = JSON.parse(message);
             }
 
-            console.log("Received: " + message);
+            //console.log("Received: " + message);
 
             if(data instanceof Array) {
                 this.receiveAction(data);
@@ -138,6 +139,16 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
             var angle = data['angle'];
             if (this.parchment) {
                 this.parchment.makePlanet(player_id, sprite, speed, richness, name, planet_id, angle);
+            }
+        },
+
+        receiveInitPlayer: function(data) {
+            var player_id = data.id;
+            var position = data.position;
+            var resources = data.resources;
+            var workout = data.workout;
+            if (this.parchment) {
+                this.parchment.updateHUD(position, resources, workout);
             }
         },
 
