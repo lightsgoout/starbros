@@ -27,7 +27,6 @@ GameContainer = cls.Class.extend({
     },
 
     init: function(id, gameServer, ws) {
-
         this.id = id;
         this.game_server = gameServer;
         this.ws = ws;
@@ -36,6 +35,12 @@ GameContainer = cls.Class.extend({
     },
 
     setup: function(width, height, planets_count) {
+
+        this.ups = 50;
+        this._planets = [];
+        this._stars = [];
+        this._world = {};
+        this._planet_counter = 0;
 
         this.names = ['Moon', 'Phobos', 'Deimos', 'Dactyl', 'Linus', 'Io', 'Europa', 'Ganymede',
         'Callisto', 'Amalthea', 'Himalia', 'Elara', 'Pasiphae', 'Taurus', 'Sinope', 'Lysithea',
@@ -54,19 +59,23 @@ GameContainer = cls.Class.extend({
         this.createPlanets(this.right_player, planets_count);
     },
     createWorld: function(width, height, planets_count) {
-        this.game_server.sendCommand(this.ws, Types.Messages.MAKE_WORLD, {
+        var world_data = {
             width: width,
             height: height,
             planets_count: planets_count
-        });
+        };
+        this._world = world_data;
+        this.game_server.sendCommand(this.ws, Types.Messages.MAKE_WORLD, world_data);
     },
     createStar: function(player, position, sprite, name) {
-        this.game_server.sendCommand(this.ws, Types.Messages.MAKE_STAR, {
+        var star_data = {
             player_id: player.id,
             sprite: sprite,
             position: position,
             name: name
-        });
+        };
+        this._stars.push(star_data);
+        this.game_server.sendCommand(this.ws, Types.Messages.MAKE_STAR, star_data);
     },
     createPlanets: function(player, planets_count) {
         var sizes = null;
@@ -121,6 +130,7 @@ GameContainer = cls.Class.extend({
             }
 
             this.createPlanet(
+                this._planet_counter++,
                 player,
                 sprite,
                 speed,
@@ -129,15 +139,43 @@ GameContainer = cls.Class.extend({
             );
         }
     },
-    createPlanet: function(player, sprite, speed, richness, name) {
-        this.game_server.sendCommand(this.ws, Types.Messages.MAKE_PLANET, {
+    createPlanet: function(id, player, sprite, speed, richness, name) {
+
+        var planet_data = {
+            id: id,
             player_id: player.id,
             sprite: sprite,
             speed: speed,
             richness: richness,
             name: name
-        });
+        };
+
+        this._planets.push(planet_data);
+        this.game_server.sendCommand(this.ws, Types.Messages.MAKE_PLANET, planet_data);
+    },
+
+    run: function() {
+        var self = this;
+        setInterval(function() {
+            self.process();
+        }, 1000 / this.ups);
+    },
+
+    setUpdatesPerSecond: function(ups) {
+        this.ups = ups;
+    },
+
+    process: function() {
+        this.processPlanets();
+    },
+
+    processPlanets: function() {
+        for (var i = 0; i < this._planets.length, i++;) {
+            var planet = this._planets[i];
+
+        }
     }
+
 });
 
 BotContainer = GameContainer.extend({

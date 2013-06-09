@@ -140,7 +140,7 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
             ctx.clearRect(0, 0, this.width, this.height);
 
             var showInfo = -1;
-            for (var i = 0; i < 2; i++){
+            for (var i = 0; i < stars.length; i++){
                 stars[i].render(curTime - lastTime);
             }
             for (var i = 0, il = this.planets.length; i < il; ++i) {

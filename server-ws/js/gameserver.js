@@ -14,29 +14,6 @@ module.exports = GameServer = cls.Class.extend({
         this.handlers[Types.Messages.HELLO] = this.receiveHello;
     },
 
-    run: function() {
-        var self = this;
-
-        var regenCount = this.ups * 2;
-        var updateCount = 0;
-        setInterval(function() {
-            self.processQueues();
-
-            if(updateCount < regenCount) {
-                updateCount += 1;
-            } else {
-                if(self.regen_callback) {
-                    self.regen_callback();
-                }
-                updateCount = 0;
-            }
-        }, 1000 / this.ups);
-    },
-
-    setUpdatesPerSecond: function(ups) {
-        this.ups = ups;
-    },
-
     sendCommand: function(ws, command, args) {
         var json = [
             command,
@@ -98,6 +75,7 @@ module.exports = GameServer = cls.Class.extend({
                     undefined, this, ws, player_id, bot_difficulty
                 );
             container.setup(width, height, planets_count);
+            container.run();
             return this.containers.push(container);
         } else {
             return this.sendError(ws, 'Currently only bot games are available. Sorry.');
