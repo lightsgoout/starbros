@@ -138,11 +138,17 @@ GameContainer = cls.Class.extend({
                 speed,
                 richness,
                 this.getRandomName(),
-                angle
+                angle,
+                0,
+                0,
+                0,
+                0
             );
         }
     },
-    createPlanet: function(id, player, sprite, speed, richness, name, angle) {
+    createPlanet: function(id, player, sprite, speed, richness, name, angle,
+                           rockets_power, rockets_speed, rockets_attack_rate,
+                           mines_workout) {
 
         var planet_data = {
             id: id,
@@ -151,7 +157,11 @@ GameContainer = cls.Class.extend({
             speed: speed,
             richness: richness,
             name: name,
-            angle: angle
+            angle: angle,
+            rockets_power: 0,
+            rockets_speed: 0,
+            rockets_attack_rate: 0,
+            mines_workout: 0
         };
 
         this._planets.push(planet_data);
