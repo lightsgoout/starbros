@@ -196,7 +196,24 @@ GameContainer = cls.Class.extend({
     },
 
     update: function(deltaTime) {
+        this.updatePlayers(deltaTime);
         this.updatePlanets(deltaTime);
+    },
+
+    updatePlayers: function(deltaTime) {
+        for (var i = 0; i < this._players.length; i++) {
+            var player = this._players[i];
+            var total_workout = 0;
+            for (var j = 0; j < this._planets.length; j++) {
+                var planet = this._planets[j];
+                if (planet.player_id != player.id) {
+                    continue;
+                }
+                total_workout += planet.mines_workout;
+            }
+            this._players[i].workout = total_workout;
+            this._players[i].resources += Math.floor(total_workout * (1000 / deltaTime));
+        }
     },
 
     updatePlanets: function(deltaTime) {
