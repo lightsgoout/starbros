@@ -36,7 +36,7 @@ GameContainer = cls.Class.extend({
 
     setup: function(width, height, planets_count) {
 
-        this.sync_interval = 20000;
+        this.sync_interval = 5000;
         this.ups = 50;
         this._planets = [];
         this._stars = [];
