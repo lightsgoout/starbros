@@ -8,8 +8,7 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
             this.right_counter = 90;
             this.planets = {};
             this.stars = {};
-            this.star_data = [];
-            this.planet_data =[];
+            this.rockets = [];
             this.planet_count = planet_count;
             this.canvas = null;
             this.ctx = null;
@@ -113,6 +112,15 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
                 ctx:  this.ctx
             }, true);
             this.planets[planet_id] = planet;
+        },
+
+        syncPlanet: function(player_id, sprite, speed, richness, name, planet_id, angle){
+            this.planets[planet_id].player_id = player_id;
+            this.planets[planet_id].sprite = sprite;
+            this.planets[planet_id].speed = speed;
+            this.planets[planet_id].richness = richness;
+            this.planets[planet_id].name = name;
+            this.planets[planet_id].angle = angle;
         },
 
         render: function(lastTime) {
