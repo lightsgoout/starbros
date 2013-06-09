@@ -6,8 +6,8 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
             this.initRunTime = new Date();
             this.left_counter = 90;
             this.right_counter = 90;
-            this.planets = [];
-            this.stars = [];
+            this.planets = {};
+            this.stars = {};
             this.star_data = [];
             this.planet_data =[];
             this.planet_count = planet_count;
@@ -75,12 +75,6 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
         },
 
         makeStar: function(player_id, sprite, position, name) {
-            var arr = [];
-            arr['name'] = name;
-            arr['player_id'] = player_id;
-            arr['sprite'] = sprite;
-            arr['position'] = position;
-            this.star_data[player_id] = arr;
             if (position === Types.Positions.LEFT){
                 var center = this.leftCenter;
             }else if(position === Types.Positions.RIGHT){
@@ -95,22 +89,16 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
                 tile: new Tile(this.ctx, this._resources[star.sprite], 0, 0, 100, 100),
                 ctx:  this.ctx
             }, true);
-            this.stars.push(star);
+            this.stars[player_id] = star;
+
         },
 
-        makePlanet: function(player_id, sprite, speed, richness, name){
-            var arr = [];
-            arr['player_id'] = player_id;
-            arr['sprite'] = sprite;
-            arr['speed'] = speed;
-            arr['richness'] = richness;
-            arr['name'] = name;
-            this.planet_data[name] = arr;
-            if (this.star_data[player_id]['position'] === Types.Positions.LEFT){
+        makePlanet: function(player_id, sprite, speed, richness, name, planet_id, angle){
+            if (this.stars[player_id].position === Types.Positions.LEFT){
                 var center = this.leftCenter;
                 this.left_counter += this.orbitWidth;
                 var counter = this.left_counter;
-            }else if(this.star_data[player_id]['position'] === Types.Positions.RIGHT){
+            }else if(this.stars[player_id].position === Types.Positions.RIGHT){
                 var center = this.rightCenter;
                 this.right_counter += this.orbitWidth;
                 var counter = this.right_counter;
@@ -119,12 +107,12 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
                 ctx:   this.ctx,
                 mouse: this.mouse
             }, true);
-            var planet = new Planet(orbit, 13, name, player_id, sprite, speed, richness);
+            var planet = new Planet(orbit, 13, name, player_id, sprite, speed, richness, planet_id, angle);
             planet.setProperty({
                 tile: new Tile(this.ctx, this._resources['planets'], planet.sprite*26, 0, 26, 26),
                 ctx:  this.ctx
             }, true);
-            this.planets.push(planet);
+            this.planets[planet_id] = planet;
         },
 
         render: function(lastTime) {
@@ -138,37 +126,40 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
                 self.render(curTime);
             });
             ctx.clearRect(0, 0, this.width, this.height);
-
             var showInfo = -1;
-            for (var i = 0; i < stars.length; i++){
-                stars[i].render(curTime - lastTime);
+            for (var star in stars){
+               if (star !== 'setProperty'){
+                   stars[star].render(curTime - lastTime);
+               }
             }
-            for (var i = 0, il = this.planets.length; i < il; ++i) {
-                planets[i].orbit.draw();
-                setInterval(planets[i].update(curTime - lastTime), Types.UpdateRatio.PLANET);
-                planets[i].render();
-                if (Math.abs(planets[i].pos.x - mouse.pos.x) < planets[i].radius
-                    && Math.abs(planets[i].pos.y - mouse.pos.y) < planets[i].radius)
-                {
-                    showInfo = i;
-                    if (mouse.pressed) {
-                        if(planets[i].detail){
-                            $('#planet').remove();
-                            this.divExists = false;
-                            planets[i].detail = false;
-                        }else{
-                            if(this.divExists){
+            for (var planet in planets) {
+                if (planet !== 'setProperty'){
+                    planets[planet].orbit.draw();
+                    setInterval(planets[planet].update(curTime - lastTime), Types.UpdateRatio.PLANET);
+                    planets[planet].render();
+                    if (Math.abs(planets[planet].pos.x - mouse.pos.x) < planets[planet].radius
+                        && Math.abs(planets[planet].pos.y - mouse.pos.y) < planets[planet].radius)
+                    {
+                        showInfo = planet;
+                        if (mouse.pressed) {
+                            if(planets[planet].detail){
                                 $('#planet').remove();
-                            }
-                            this.div = document.createElement('div');
-                            this.div.id = 'planet';
-                            $(this.div).appendTo('#controls');
-                            $('#planet').html(planets[i].planetInfo());
-                            this.divExists = true;
-                            planets[i].detail = true;
-                            for (var j = 0; j < il; j++){
-                                if(j != i){
-                                    planets[j].detail = false;
+                                this.divExists = false;
+                                planets[planet].detail = false;
+                            }else{
+                                if(this.divExists){
+                                    $('#planet').remove();
+                                }
+                                this.div = document.createElement('div');
+                                this.div.id = 'planet';
+                                $(this.div).appendTo('#controls');
+                                $('#planet').html(planets[planet].planetInfo());
+                                this.divExists = true;
+                                planets[planet].detail = true;
+                                for (var planet2 in planets){
+                                    if((planet2 != planet) && (planet2 !== 'setProperty')){
+                                        planets[planet2].detail = false;
+                                    }
                                 }
                             }
                         }
