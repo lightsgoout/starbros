@@ -168,10 +168,10 @@ GameContainer = cls.Class.extend({
             richness: richness,
             name: name,
             angle: angle,
-            rockets_power: 0,
-            rockets_speed: 0,
-            rockets_attack_rate: 0,
-            mines_workout: 0
+            rockets_power: rockets_power,
+            rockets_speed: rockets_speed,
+            rockets_attack_rate: rockets_attack_rate,
+            mines_workout: mines_workout
         };
 
         this._planets.push(planet_data);
@@ -200,7 +200,7 @@ GameContainer = cls.Class.extend({
     },
 
     updatePlanets: function(deltaTime) {
-        for (var i = 0; i < this._planets.length, i++;) {
+        for (var i = 0; i < this._planets.length; i++) {
             this._planets[i].angle += this._planets[i].speed * deltaTime;
         }
     },
