@@ -68,7 +68,6 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
             };
             IM.add('img/sun.png', 'sun.png');
             IM.add('img/planets.png', 'planets');
-            IM.add('img/rocket.png', 'rocket');
         },
 
         initMouse: function() {
@@ -99,15 +98,14 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
             this.stars.push(star);
         },
 
-        makePlanet: function(player_id, sprite, speed, richness, name, planet_id){
+        makePlanet: function(player_id, sprite, speed, richness, name){
             var arr = [];
             arr['player_id'] = player_id;
             arr['sprite'] = sprite;
             arr['speed'] = speed;
             arr['richness'] = richness;
             arr['name'] = name;
-            arr['planet_id'] = planet_id;
-            this.planet_data[planet_id] = arr;
+            this.planet_data[name] = arr;
             if (this.star_data[player_id]['position'] === Types.Positions.LEFT){
                 var center = this.leftCenter;
                 this.left_counter += this.orbitWidth;
@@ -121,7 +119,7 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
                 ctx:   this.ctx,
                 mouse: this.mouse
             }, true);
-            var planet = new Planet(orbit, 13, name, player_id, sprite, speed, richness, planet_id);
+            var planet = new Planet(orbit, 13, name, player_id, sprite, speed, richness);
             planet.setProperty({
                 tile: new Tile(this.ctx, this._resources['planets'], planet.sprite*26, 0, 26, 26),
                 ctx:  this.ctx
@@ -142,7 +140,7 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
             ctx.clearRect(0, 0, this.width, this.height);
 
             var showInfo = -1;
-            for (var i = 0; i < this.stars.length; i++){
+            for (var i = 0; i < stars.length; i++){
                 stars[i].render(curTime - lastTime);
             }
             for (var i = 0, il = this.planets.length; i < il; ++i) {
