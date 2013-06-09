@@ -77,7 +77,7 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
                     data = JSON.stringify(json);
                 }
                 this.connection.send(data);
-                console.log('Sent: ' + data);
+                //console.log('Sent: ' + data);
             }
 
         },
@@ -91,7 +91,7 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
                 data = JSON.parse(message);
             }
 
-            console.log("Received: " + message);
+            //console.log("Received: " + message);
 
             if(data instanceof Array) {
                 this.receiveAction(data);
