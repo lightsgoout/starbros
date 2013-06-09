@@ -10,8 +10,9 @@ PlayerInterface = cls.Class.extend({
 });
 
 HumanPlayer = PlayerInterface.extend({
-    init: function(player_id) {
-        this.id = player_id;
+    init: function(id, position) {
+        this.id = id;
+        this.position = position;
     }
 });
 
@@ -19,8 +20,9 @@ BotPlayer = PlayerInterface.extend({
 
     defaultDifficulty: Types.BotLevels.MEDIUM,
 
-    init: function(bot_difficulty) {
+    init: function(bot_difficulty, position) {
         this.id = 'bot';
+        this.position = position;
 
         if (!bot_difficulty) {
             bot_difficulty = this.defaultDifficulty;

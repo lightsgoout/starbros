@@ -6,7 +6,8 @@ Types = {
         MAKE_STAR: 'MAKE_STAR',
         MAKE_PLANET: 'MAKE_PLANET',
         SET_RESOURCES: 'SET_RESOURCES',
-        SYNC: 'SYNC'
+        SYNC: 'SYNC',
+        INIT_PLAYER: 'INIT_PLAYER'
     },
     Entities: {
         STAR: 'STAR',
@@ -44,7 +45,9 @@ Types = {
     },
     UpdateRatio: {
         PLANET: 20
-    }
+    },
+    INITIAL_RESOURCES: 0,
+    INITIAL_WORKOUT: 8 // per second
 };
 
 if(!(typeof exports === 'undefined')) {

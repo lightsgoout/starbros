@@ -26,12 +26,12 @@ GameContainer = cls.Class.extend({
         return this.names.pop();
     },
 
-    init: function(id, gameServer, ws) {
+    init: function(id, gameServer, ws, left_player_id, right_player_id) {
         this.id = id;
         this.game_server = gameServer;
         this.ws = ws;
-        this.left_player = new player.HumanPlayer();
-        this.right_player = new player.HumanPlayer();
+        this.left_player = new player.HumanPlayer(left_player_id, Types.Positions.LEFT);
+        this.right_player = new player.HumanPlayer(right_player_id, Types.Positions.RIGHT);
     },
 
     setup: function(width, height, planets_count) {
@@ -41,6 +41,7 @@ GameContainer = cls.Class.extend({
         this._planets = [];
         this._stars = [];
         this._world = {};
+        this._players = [this.left_player, this.right_player]
         this._planet_counter = 0;
 
         this.names = ['Moon', 'Phobos', 'Deimos', 'Dactyl', 'Linus', 'Io', 'Europa', 'Ganymede',
@@ -58,6 +59,13 @@ GameContainer = cls.Class.extend({
         this.createStar(this.right_player, Types.Positions.RIGHT, Types.StarSprites.s0, this.getRandomName());
         this.createPlanets(this.left_player, planets_count);
         this.createPlanets(this.right_player, planets_count);
+        this.initializePlayer(this.left_player, Types.INITIAL_RESOURCES, Types.INITIAL_WORKOUT);
+        this.initializePlayer(this.right_player, Types.INITIAL_RESOURCES, Types.INITIAL_WORKOUT);
+    },
+    initializePlayer: function(player, resources, workout) {
+        player.resources = resources;
+        player.workout = workout;
+        this.game_server.sendCommand(this.ws, Types.Messages.INIT_PLAYER, player);
     },
     createWorld: function(width, height, planets_count) {
         var world_data = {
@@ -198,7 +206,8 @@ GameContainer = cls.Class.extend({
 
     syncState: function() {
         var sync_data = {
-            planets: this._planets
+            planets: this._planets,
+            players: this._players
         };
         this.game_server.sendCommand(this.ws, Types.Messages.SYNC, sync_data);
     }
@@ -210,8 +219,8 @@ BotContainer = GameContainer.extend({
         this.id = id;
         this.game_server = gameServer;
         this.ws = ws;
-        this.left_player = new player.HumanPlayer(player_id);
-        this.right_player = new player.BotPlayer(bot_difficulty);
+        this.left_player = new player.HumanPlayer(player_id, Types.Positions.LEFT);
+        this.right_player = new player.BotPlayer(bot_difficulty, Types.Positions.RIGHT);
     }
 });
 
