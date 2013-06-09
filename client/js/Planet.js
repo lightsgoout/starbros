@@ -1,12 +1,12 @@
 define(['Point'], function(Point) {
 
     var Planet = Class.extend({
-        init: function(orbit, radius, name, player_id, sprite, speed, richness, planet_id) {
+        init: function(orbit, radius, name, player_id, sprite, speed, richness, planet_id, angle) {
             this.pos    = new Point(0, 0);
             this.orbit  = orbit;
             this.radius = radius;
             this.speed  = Math.PI*2 / (speed * Types.SpeedRatio.PLANET);
-            this.angle  = ~~(Math.random() * 360);
+            this.angle  = angle;
             this.sprite = sprite;
             this.mines = 5;
             this.planet_id = planet_id;

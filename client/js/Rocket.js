@@ -14,7 +14,7 @@ define(['Point'], function(Point) {
         },
 
         update: function(deltaTime){
-            this.pos.x = this.orbit.center.x + this.orbit.radius * Math.cos(this.angle);
+            this.pos.x =
             this.pos.y = this.orbit.center.y + this.orbit.radius * Math.sin(this.angle);
             this.angle += this.speed * deltaTime;
         },

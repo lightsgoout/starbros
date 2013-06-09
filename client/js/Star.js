@@ -5,7 +5,6 @@ define(['Point'], function(Point) {
            this.orbit  = orbit;
            this.radius = radius;
            this.speed  = Math.PI*2 / (time * 1000);
-           this.angle  = ~~(Math.random() * 360);
            this.name = name;
            this.player_id = player_id;
            this.sprite = sprite;

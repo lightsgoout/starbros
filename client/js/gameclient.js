@@ -134,9 +134,10 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
             var speed = data['speed'];
             var richness = data['richness'];
             var name = data['name'];
-            var planet_id = data['planet_id'];
+            var planet_id = data['id'];
+            var angle = data['angle'];
             if (this.parchment) {
-                this.parchment.makePlanet(player_id, sprite, speed, richness, name, planet_id);
+                this.parchment.makePlanet(player_id, sprite, speed, richness, name, planet_id, angle);
             }
         },
 
