@@ -199,8 +199,7 @@ GameContainer = cls.Class.extend({
 
     updatePlanets: function(deltaTime) {
         for (var i = 0; i < this._planets.length, i++;) {
-            var planet = this._planets[i];
-            planet.angle += planet.speed * deltaTime;
+            this.planets[i].angle += planet.speed * deltaTime;
         }
     },
 
