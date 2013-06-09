@@ -5,7 +5,7 @@ define(['Point'], function(Point) {
             this.pos    = new Point(0, 0);
             this.orbit  = orbit;
             this.radius = radius;
-            this.speed  = Math.PI*2 / (speed * Types.SpeedRatio.PLANET);
+            this.speed  = speed;
             this.angle  = angle;
             this.sprite = sprite;
             this.mines = 5;

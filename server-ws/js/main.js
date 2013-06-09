@@ -27,6 +27,10 @@ function main(config) {
         });
     });
 
+    server.on('close', function() {
+        console.log('disconnected');
+    });
+
     process.on('uncaughtException', function (e) {
         log.error('uncaughtException: ' + e);
     });

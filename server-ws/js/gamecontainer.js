@@ -139,6 +139,8 @@ GameContainer = cls.Class.extend({
                     break;
             }
 
+            speed = Math.PI*2 / (speed * Types.SpeedRatio.PLANET)
+
             this.createPlanet(
                 this._planet_counter++,
                 player,
@@ -179,8 +181,8 @@ GameContainer = cls.Class.extend({
     run: function() {
         var self = this;
         var lastTime = new Date();
-        var curTime = new Date();
         setInterval(function() {
+            var curTime = new Date();
             self.update(curTime - lastTime);
             lastTime = curTime;
         }, 1000 / this.ups);
@@ -199,7 +201,7 @@ GameContainer = cls.Class.extend({
 
     updatePlanets: function(deltaTime) {
         for (var i = 0; i < this._planets.length, i++;) {
-            this.planets[i].angle += this.planets[i].speed * deltaTime;
+            this._planets[i].angle += this._planets[i].speed * deltaTime;
         }
     },
 
