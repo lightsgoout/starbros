@@ -44,6 +44,13 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
             this.ctx.textAlign = 'center';
         },
 
+        updateHUD: function(position, resources, workout) {
+            if($('#hud')) {
+                $('#hud_resources_value').html(resources);
+                $('#hud_workout_value').html(workout);
+            }
+        },
+
         initResources: function() {
             var self  = this;
             var IM = {
