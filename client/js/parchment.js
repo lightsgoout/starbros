@@ -145,7 +145,8 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
             }
             for (var i = 0, il = this.planets.length; i < il; ++i) {
                 planets[i].orbit.draw();
-                planets[i].render(curTime - lastTime);
+                setInterval(planets[i].update(curTime - lastTime), Types.UpdateRatio.PLANET);
+                planets[i].render();
                 if (Math.abs(planets[i].pos.x - mouse.pos.x) < planets[i].radius
                     && Math.abs(planets[i].pos.y - mouse.pos.y) < planets[i].radius)
                 {

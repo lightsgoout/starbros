@@ -40,6 +40,9 @@ Types = {
     },
     SpeedRatio: {
         PLANET: 50000
+    },
+    UpdateRatio: {
+        PLANET: 20
     }
 };
 
