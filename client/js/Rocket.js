@@ -1,49 +1,18 @@
 define(['Point'], function(Point) {
 
-    var Planet = Class.extend({
-        init: function(orbit, radius, name, player_id, sprite, speed, richness, planet_id) {
+    var Rocket = Class.extend({
+        init: function(speed, player_id, power, target_id, life_time) {
             this.pos    = new Point(0, 0);
-            this.orbit  = orbit;
-            this.radius = radius;
-            this.speed  = Math.PI*2 / (speed * Types.SpeedRatio.PLANET);
-            this.angle  = ~~(Math.random() * 360);
+            this.radius = 1;
+            this.life_time = life_time;
+            this.speed  = speed;
             this.sprite = sprite;
-            this.mines = 5;
-            this.planet_id = planet_id;
+            this.target_id = target_id;
             this.player_id = player_id;
-            this.power= 120;
-            this.attack = 300;
-            this.atack_speed = 1000;
-            this.rocket_speed = Math.PI*2 / (3 * Types.SpeedRatio.PLANET);
-            this.rocket_life_time = 4000;
-            this.detail = false;
-            this.animate = true;
-            this.richness = richness;
-            this.name = name;
-            this.tile;
+            this.power = power;
             this.ctx;
-            this.orbit.setProperty({'planet': this});
         },
 
-        drawBorder: function() {
-            var ctx = this.ctx;
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = 'rgb(0,192,255)';
-            ctx.beginPath();
-            ctx.arc(this.pos.x, this.pos.y, this.radius * 1.1, 0, Math.PI * 2, true);
-            ctx.closePath();
-            ctx.stroke();
-        },
-        showInfo: function() {
-            var x = this.pos.x + this.radius * 0.7;
-            var y = this.pos.y + this.radius * 0.9;
-
-            var ctx = this.ctx;
-            ctx.fillStyle = '#002244';
-            ctx.fillRect(x, y, 100, 24);
-            ctx.fillStyle = '#0ff';
-            ctx.fillText(this.name, x + 50, y + 17);
-        },
         update: function(deltaTime){
             this.pos.x = this.orbit.center.x + this.orbit.radius * Math.cos(this.angle);
             this.pos.y = this.orbit.center.y + this.orbit.radius * Math.sin(this.angle);

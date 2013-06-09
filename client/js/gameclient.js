@@ -9,6 +9,7 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
 
             this.handlers = [];
             this.handlers[Types.Messages.ERROR] = this.receiveError;
+            this.handlers[Types.Messages.SYNC] = this.onSync;
             this.handlers[Types.Messages.MAKE_STAR] = this.receiveMakeStar;
             this.handlers[Types.Messages.MAKE_WORLD] = this.receiveMakeWorld;
             this.handlers[Types.Messages.MAKE_PLANET] = this.receiveMakePlanet;
@@ -133,9 +134,14 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
             var speed = data['speed'];
             var richness = data['richness'];
             var name = data['name'];
+            var planet_id = data['planet_id'];
             if (this.parchment) {
-                this.parchment.makePlanet(player_id, sprite, speed, richness, name);
+                this.parchment.makePlanet(player_id, sprite, speed, richness, name, planet_id);
             }
+        },
+
+        onSync: function(data){
+
         }
     });
 

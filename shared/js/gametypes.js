@@ -5,7 +5,8 @@ Types = {
         MAKE_WORLD: 'MAKE_WORLD',
         MAKE_STAR: 'MAKE_STAR',
         MAKE_PLANET: 'MAKE_PLANET',
-        SET_RESOURCES: 'SET_RESOURCES'
+        SET_RESOURCES: 'SET_RESOURCES',
+        SYNC: 'SYNC'
     },
     Entities: {
         STAR: 'STAR',
