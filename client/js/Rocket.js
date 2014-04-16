@@ -6,7 +6,7 @@ define(['Point'], function(Point) {
             this.radius = 10;
             this.life_time = life_time;
             this.speed  = speed;
-            this.sprite = sprite;
+            this.sprite = 'rockets';
             this.target_id = target_id;
             this.player_id = player_id;
             this.power = power;
