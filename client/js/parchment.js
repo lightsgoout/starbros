@@ -166,9 +166,11 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
                 planets = this.planets,
                 stars = this.stars,
                 mouse   = this.mouse;
+
             requestAnimationFrame(function(){
                 self.render(curTime);
             });
+
             ctx.clearRect(0, 0, this.width, this.height);
             var showInfo = -1;
             for (var star in stars){
@@ -179,7 +181,7 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
             for (var planet in planets) {
                 if (planet !== 'setProperty'){
                     planets[planet].orbit.draw();
-                    setInterval(planets[planet].update(curTime - lastTime), Types.UpdateRatio.PLANET);
+                    setTimeout(planets[planet].update(curTime - lastTime), Types.UpdateRatio.PLANET);
                     planets[planet].render();
                     if (Math.abs(planets[planet].pos.x - mouse.pos.x) < planets[planet].radius
                         && Math.abs(planets[planet].pos.y - mouse.pos.y) < planets[planet].radius)

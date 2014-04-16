@@ -79,6 +79,8 @@ define(['Point'], function(Point) {
             str += '<h3>' + this.name + '</h3>';
             str += '<p>Mines level :' + this.mines + '</p>';
             str += '<p>Fire power :' + this.power + '</p>';
+            str += '<p>Size :' + this.size + '</p>';
+            str += '<p>Richness: ' + this.richness + '</p>';
             str += '<a class="btn-glow-inverse">Upgrade Mine</a>';
             str += '<a class="btn-glow-inverse">Upgrade Cannon</a>';
             return str;

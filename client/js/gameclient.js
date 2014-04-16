@@ -91,7 +91,7 @@ define(['lib/bison', 'parchment', 'shared/js/gametypes'], function(BISON, Parchm
                 data = JSON.parse(message);
             }
 
-            //console.log("Received: " + message);
+            console.log("Received: " + message);
 
             if(data instanceof Array) {
                 this.receiveAction(data);
