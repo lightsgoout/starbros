@@ -1,0 +1,3 @@
+procfile: ./foreman/dev.yaml
+log: /tmp
+concurrency: frontend=1,backend=1

@@ -75,7 +75,7 @@ define(['MouseController', 'Orbit', 'Planet', 'Point', 'System', 'Tile', 'Star',
             };
             IM.add('img/sun.png', 'sun.png');
             IM.add('img/planets.png', 'planets');
-            IM.add('img/rocket.png', 'rockets');
+//            IM.add('img/rocket.png', 'rockets');
         },
 
         initMouse: function() {

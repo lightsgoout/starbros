@@ -1,0 +1,2 @@
+frontend: node ../client/server.js
+backend: node ../server-ws/js/main.js

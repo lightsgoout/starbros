@@ -48,8 +48,8 @@ function getConfigFile(path, callback) {
     });
 }
 
-var defaultConfigPath = './server-ws/config.json',
-    customConfigPath = './server-ws/config_local.json';
+var defaultConfigPath = '.././server-ws/config.json',
+    customConfigPath = '.././server-ws/config_local.json';
 
 process.argv.forEach(function (val, index, array) {
     if(index === 2) {
